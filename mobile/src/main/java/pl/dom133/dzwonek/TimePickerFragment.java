@@ -19,11 +19,10 @@ public class TimePickerFragment extends DialogFragment
         Times tim;
         String who;
 
-        public TimePickerFragment(EditText et, Times tim, String who)
+        public TimePickerFragment(EditText et, Times tim)
         {
             this.et = et;
             this.tim = tim;
-            this.who = who;
         }
 
         @Override
@@ -41,8 +40,6 @@ public class TimePickerFragment extends DialogFragment
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             String minutes = Integer.toString(minute);
             String hourOfDays = Integer.toString(hourOfDay);
-            if(who=="od")tim.od_time = hourOfDays+":"+minutes;
-            else if(who=="do") tim.do_time = hourOfDays+":"+minutes;
             if(minute>=0 && minute<10){minutes = "0"+minutes;}
             if(hourOfDay>=0 && hourOfDay<10){hourOfDays = "0"+hourOfDays;}
             et.setText(hourOfDays + ":" + minutes);

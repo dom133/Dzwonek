@@ -4,14 +4,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-/**
- * Created by dom133 on 24.03.2016.
- */
 public class Times {
     public List<String> od_time_list = new ArrayList<>();
     public List<String> do_time_list = new ArrayList<>();
-    public String od_time;
-    public String do_time;
 
     public ArrayList<Integer> getTime()
     {

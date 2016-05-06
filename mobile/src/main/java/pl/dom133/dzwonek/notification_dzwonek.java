@@ -90,7 +90,7 @@ public class notification_dzwonek extends AppCompatActivity {
         deleteDialogView.findViewById(R.id.od_time).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment newFragment = new TimePickerFragment((EditText) deleteDialog.findViewById(R.id.od_time), ts, "od");
+                DialogFragment newFragment = new TimePickerFragment((EditText) deleteDialog.findViewById(R.id.od_time), ts);
                 newFragment.show(getSupportFragmentManager(), "timePicker");
             }
         });
@@ -98,7 +98,7 @@ public class notification_dzwonek extends AppCompatActivity {
         deleteDialogView.findViewById(R.id.do_time).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment newFragment = new TimePickerFragment((EditText)deleteDialog.findViewById(R.id.do_time), ts, "do");
+                DialogFragment newFragment = new TimePickerFragment((EditText)deleteDialog.findViewById(R.id.do_time), ts);
                 newFragment.show(getSupportFragmentManager(), "timePicker");
             }
         });
@@ -108,8 +108,32 @@ public class notification_dzwonek extends AppCompatActivity {
             public void onClick(View v) {
                 EditText od_time = (EditText)deleteDialogView.findViewById(R.id.od_time);
                 EditText do_time = (EditText)deleteDialogView.findViewById(R.id.do_time);
-                ts.od_time_list.add(ts.od_time);
-                ts.do_time_list.add(ts.od_time);
+                String[] od_time_split = od_time.getText().toString().split(":");
+                String[] do_time_split = do_time.getText().toString().split(":");
+                String od_time_string = null;
+                String do_time_string = null;
+                if(od_time_split[0].charAt(0)=='0') {
+                    if(od_time_split[1].charAt(0)=='0') {od_time_string = od_time_split[0].charAt(1) + ":" + od_time_split[1].charAt(1);}
+                    else {od_time_string = od_time_split[0].charAt(1) + ":" + od_time_split[1];}
+                }
+                else
+                {
+                    if(od_time_split[1].charAt(0)=='0') {od_time_string = od_time_split[0] + ":" + od_time_split[1].charAt(1);}
+                    else {od_time_string = od_time_split[0] + ":" + od_time_split[1];}
+                }
+
+                if(do_time_split[0].charAt(0)=='0') {
+                    if(do_time_split[1].charAt(0)=='0') {do_time_string = do_time_split[0].charAt(1) + ":" + do_time_split[1].charAt(1);}
+                    else {do_time_string = do_time_split[0].charAt(1) + ":" + do_time_split[1];}
+                }
+                else
+                {
+                    if(do_time_split[1].charAt(0)=='0') {do_time_string = do_time_split[0] + ":" + do_time_split[1].charAt(1);}
+                    else {do_time_string = do_time_split[0] + ":" + do_time_split[1];}
+                }
+
+                ts.od_time_list.add(od_time_string);
+                ts.do_time_list.add(do_time_string);
                 arrayList.add("Od: "+od_time.getText().toString()+" Do: "+do_time.getText().toString());
                 adapter.notifyDataSetChanged();
                 deleteDialog.cancel();
