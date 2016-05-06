@@ -2,6 +2,9 @@ package pl.dom133.dzwonek;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.util.Log;
+
+import java.util.logging.Logger;
 
 /**
  * Created by dom133 on 24.03.2016.
@@ -34,9 +37,13 @@ public class NotificationTask extends AsyncTask<Void, Void, Void> {
                         String[] od_times = ts.od_time_list.get(i).split(":");
                         String[] do_times = ts.do_time_list.get(i).split(":");
 
-                        if(ts.getTime().get(0)>=Integer.valueOf(od_times[0]) && ts.getTime().get(0)<Integer.valueOf(do_times[0]) && ts.getTime().get(1)>=Integer.valueOf(od_times[1]) && ts.getTime().get(1)<Integer.valueOf(do_times[1]))
+                        Log.i("INFO", "1 : "+ts.getTime().get(0)+":"+ts.getTime().get(1)+" "+od_times[0]+":"+od_times[1]+" "+do_times[0]+":"+do_times[1]);
+
+                        if(ts.getTime().get(0)>=Integer.valueOf(od_times[0]) && ts.getTime().get(0)<Integer.valueOf(do_times[0]) && ts.getTime().get(1)>=Integer.valueOf(do_times[1]) && ts.getTime().get(1)<Integer.valueOf(do_times[1]))
                         {
+                            Log.i("INFO", "2 : "+ts.getTime().get(0)+":"+ts.getTime().get(1));
                             while(true) {
+                                Log.i("INFO", "3 : "+ts.getTime().get(0)+":"+ts.getTime().get(1));
                                 int hour = Integer.valueOf(do_times[0]) - ts.getTime().get(0);
                                 int minuts = Integer.valueOf(do_times[1]) - ts.getTime().get(1);
                                 minuts = minuts + (hour * 60);
@@ -49,6 +56,7 @@ public class NotificationTask extends AsyncTask<Void, Void, Void> {
                             }
                         } else if(ts.getTime().get(0)>=Integer.valueOf(od_times[0]) && ts.getTime().get(0)<=Integer.valueOf(do_times[0]) && ts.getTime().get(1)>=Integer.valueOf(od_times[1]) && ts.getTime().get(1)<Integer.valueOf(do_times[1])) {
                             while(true) {
+                                Log.i("INFO", "4 : "+ts.getTime().get(0)+":"+ts.getTime().get(1));
                                 int minuts = Integer.valueOf(do_times[1]) - ts.getTime().get(1);
                                 if (minuts == 0){
                                     i=i+1;
@@ -58,7 +66,9 @@ public class NotificationTask extends AsyncTask<Void, Void, Void> {
                                 Thread.sleep(1000);
                             }
                         } else if(i>0){
+                            Log.i("INFO", "5 : "+ts.getTime().get(0)+":"+ts.getTime().get(1));
                             if(ts.getTime().get(0)>=Integer.valueOf(do_times_last[0]) && ts.getTime().get(1)>=Integer.valueOf(do_times_last[1])) {
+                                Log.i("INFO", "6 : "+ts.getTime().get(0)+":"+ts.getTime().get(1));
                                 while (true) {
                                     int minuts = Integer.valueOf(od_times[1]) - ts.getTime().get(1);
                                     if (minuts == 0){break;}
