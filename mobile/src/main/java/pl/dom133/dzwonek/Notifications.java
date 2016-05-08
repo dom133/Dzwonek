@@ -2,6 +2,8 @@ package pl.dom133.dzwonek;
 
 import android.app.Application;
 import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +18,12 @@ public class Notifications {
     public Notifications(Application app)
     {
         this.app = app;
+    }
+
+    public void cancleNotification()
+    {
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(app);
+        notificationManager.cancel(1);
     }
 
     public void sendNotification(String title, String txt)

@@ -15,8 +15,10 @@ public class Times {
         Calendar c = Calendar.getInstance();
         String hour = Integer.toString(c.get(Calendar.HOUR_OF_DAY));
         String minute = Integer.toString(c.get(Calendar.MINUTE));
+        String sec = Integer.toString(c.get(Calendar.SECOND));
         list.add(Integer.valueOf(hour));
         list.add(Integer.valueOf(minute));
+        list.add(Integer.valueOf(sec));
         return list;
     }
 

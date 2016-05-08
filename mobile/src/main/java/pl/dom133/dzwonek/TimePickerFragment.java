@@ -17,7 +17,6 @@ public class TimePickerFragment extends DialogFragment
 
         EditText et;
         Times tim;
-        String who;
 
         public TimePickerFragment(EditText et, Times tim)
         {
