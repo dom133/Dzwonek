@@ -41,7 +41,6 @@ public class Notifications {
                 .build();
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(app);
-
         int notificationId = 1;
         notificationManager.notify(notificationId, notification);
     }

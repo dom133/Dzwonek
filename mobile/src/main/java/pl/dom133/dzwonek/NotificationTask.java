@@ -38,28 +38,59 @@ public class NotificationTask extends AsyncTask<Void, Void, Void> {
                         String[] do_times = ts.do_time_list.get(i).split(":");
 
                         Log.i("INFO", "1:"+i+" : "+ts.getTime().get(0)+":"+ts.getTime().get(1)+" "+od_times[0]+":"+od_times[1]+" "+do_times[0]+":"+do_times[1]);
-
-                        if(ts.getTime().get(0)>=Integer.valueOf(od_times[0]) && ts.getTime().get(1)>=Integer.valueOf(od_times[1]) && ts.getTime().get(0)<=Integer.valueOf(do_times[0]) && ts.getTime().get(1)<=Integer.valueOf(do_times[1]) ) {
-                            Log.i("INFO", "2 : "+ts.getTime().get(0)+":"+ts.getTime().get(1));
-                            while(true) {
-                                Log.i("INFO", "3 : "+ts.getTime().get(0)+":"+ts.getTime().get(1));
+                        if(ts.getTime().get(0)>=Integer.valueOf(od_times[0]) && ts.getTime().get(1)>=Integer.valueOf(od_times[1])) {
+                            while (true) {
+                                Log.i("INFO", "2 : " + ts.getTime().get(0) + ":" + ts.getTime().get(1));
                                 int hour = Integer.valueOf(do_times[0]) - ts.getTime().get(0);
                                 int minuts = Integer.valueOf(do_times[1]) - ts.getTime().get(1);
                                 int sec;
                                 minuts = minuts + (hour * 60);
-                                sec = (minuts*60) - ts.getTime().get(2);
-                                if (minuts == 0){
-                                    i=i+1;
+                                sec = (minuts * 60) - ts.getTime().get(2);
+                                if (minuts == 0) {
+                                    i = i + 1;
                                     nf.cancleNotification();
                                     break;
                                 }
 
-                                if(sec==1) nf.sendNotification("Czas: "+sec+" sec", "Do dzwonka pozostała "+sec+" sekunda");
-                                else if(sec>=2 && sec<5) nf.sendNotification("Czas: "+sec+" sec", "Do dzwonka pozostały "+sec+" sekundy");
-                                else if(sec>=5 && sec<=60) nf.sendNotification("Czas: "+sec+" sec", "Do dzwonka pozostało "+sec+" sekund");
-                                else if(minuts==1)nf.sendNotification("Czas: "+minuts+" min", "Do dzwonka pozostała "+minuts+" minuta");
-                                else if(minuts>=2 && minuts<5)nf.sendNotification("Czas: "+minuts+":"+sec+" min", "Do dzwonka pozostały "+minuts+" minuty");
-                                else if(minuts>=5)nf.sendNotification("Czas: "+minuts+" min", "Do dzwonka pozostało "+minuts+"minut");
+                                if (sec == 1)
+                                    nf.sendNotification("Czas: " + sec + " sec", "Do dzwonka pozostała " + sec + " sekunda");
+                                else if (sec >= 2 && sec < 5)
+                                    nf.sendNotification("Czas: " + sec + " sec", "Do dzwonka pozostały " + sec + " sekundy");
+                                else if (sec >= 5 && sec <= 60)
+                                    nf.sendNotification("Czas: " + sec + " sec", "Do dzwonka pozostało " + sec + " sekund");
+                                else if (minuts == 1)
+                                    nf.sendNotification("Czas: " + minuts + ":" + (60 - ts.getTime().get(2)) + " min", "Do dzwonka pozostała " + minuts + " minuta");
+                                else if (minuts >= 2 && minuts < 5)
+                                    nf.sendNotification("Czas: " + minuts + ":" + (60 - ts.getTime().get(2)) + " min", "Do dzwonka pozostały " + minuts + " minuty");
+                                else if (minuts >= 5)
+                                    nf.sendNotification("Czas: " + minuts + ":" + (60 - ts.getTime().get(2)) + " min", "Do dzwonka pozostało " + minuts + " minut");
+                                Thread.sleep(1000);
+                            }
+                        } else if(ts.getTime().get(0)<=Integer.valueOf(od_times[0]) && ts.getTime().get(1)<Integer.valueOf(od_times[1])) {
+                            while (true) {
+                                Log.i("INFO", "3 : " + ts.getTime().get(0) + ":" + ts.getTime().get(1));
+                                int hour = Integer.valueOf(do_times[0]) - ts.getTime().get(0);
+                                int minuts = Integer.valueOf(do_times[1]) - ts.getTime().get(1);
+                                int sec;
+                                minuts = minuts + (hour * 60);
+                                sec = (minuts * 60) - ts.getTime().get(2);
+                                if (minuts == 0) {
+                                    nf.cancleNotification();
+                                    break;
+                                }
+
+                                if (sec == 1)
+                                    nf.sendNotification("Czas: " + sec + " sec", "Do dzwonka pozostała " + sec + " sekunda");
+                                else if (sec >= 2 && sec < 5)
+                                    nf.sendNotification("Czas: " + sec + " sec", "Do dzwonka pozostały " + sec + " sekundy");
+                                else if (sec >= 5 && sec <= 60)
+                                    nf.sendNotification("Czas: " + sec + " sec", "Do dzwonka pozostało " + sec + " sekund");
+                                else if (minuts == 1)
+                                    nf.sendNotification("Czas: " + minuts + ":" + (60 - ts.getTime().get(2)) + " min", "Do dzwonka pozostała " + minuts + " minuta");
+                                else if (minuts >= 2 && minuts < 5)
+                                    nf.sendNotification("Czas: " + minuts + ":" + (60 - ts.getTime().get(2)) + " min", "Do dzwonka pozostały " + minuts + " minuty");
+                                else if (minuts >= 5)
+                                    nf.sendNotification("Czas: " + minuts + ":" + (60 - ts.getTime().get(2)) + " min", "Do dzwonka pozostało " + minuts + " minut");
                                 Thread.sleep(1000);
                             }
                         }
