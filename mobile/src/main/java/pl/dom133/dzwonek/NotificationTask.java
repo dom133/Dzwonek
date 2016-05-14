@@ -30,10 +30,6 @@ public class NotificationTask extends AsyncTask<Void, Void, Void> {
                         int size = ts.od_time_list.size();
                         if(i>(size-1)) {i=0; break;}
 
-                        String[] od_times_last = new String[0];
-                        String[] do_times_last = new String[0];
-                        if(i!=0) {od_times_last = ts.od_time_list.get(i-1).split(":"); do_times_last = ts.do_time_list.get(i-1).split(":"); }
-
                         String[] od_times = ts.od_time_list.get(i).split(":");
                         String[] do_times = ts.do_time_list.get(i).split(":");
 
@@ -46,7 +42,7 @@ public class NotificationTask extends AsyncTask<Void, Void, Void> {
                                 int sec;
                                 minuts = minuts + (hour * 60);
                                 sec = (minuts * 60) - ts.getTime().get(2);
-                                if (minuts == 0) {
+                                if (minuts <= 0) {
                                     i = i + 1;
                                     nf.cancleNotification();
                                     break;
@@ -68,13 +64,13 @@ public class NotificationTask extends AsyncTask<Void, Void, Void> {
                             }
                         } else if(ts.getTime().get(0)<=Integer.valueOf(od_times[0]) && ts.getTime().get(1)<Integer.valueOf(od_times[1])) {
                             while (true) {
-                                Log.i("INFO", "3 : " + ts.getTime().get(0) + ":" + ts.getTime().get(1));
-                                int hour = Integer.valueOf(do_times[0]) - ts.getTime().get(0);
-                                int minuts = Integer.valueOf(do_times[1]) - ts.getTime().get(1);
+                                int hour = Integer.valueOf(od_times[0]) - ts.getTime().get(0);
+                                int minuts = Integer.valueOf(od_times[1]) - ts.getTime().get(1);
                                 int sec;
-                                minuts = minuts + (hour * 60);
+                                //minuts = minuts + (hour * 60);
                                 sec = (minuts * 60) - ts.getTime().get(2);
-                                if (minuts == 0) {
+                                Log.i("INFO", "3:"+minuts+" : " + ts.getTime().get(0) + ":" + ts.getTime().get(1));
+                                if (minuts <= 0) {
                                     nf.cancleNotification();
                                     break;
                                 }
