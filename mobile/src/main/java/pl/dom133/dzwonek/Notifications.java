@@ -14,10 +14,12 @@ import android.support.v7.app.AppCompatActivity;
 public class Notifications {
 
     Application app;
+    int minuts;
 
-    public Notifications(Application app)
+    public Notifications(Application app, int minuts)
     {
         this.app = app;
+        this.minuts = minuts;
     }
 
     public void cancleNotification()
@@ -28,20 +30,75 @@ public class Notifications {
 
     public void sendNotification(String title, String txt)
     {
-        Notification notification = new NotificationCompat.Builder(app)
-                .setSmallIcon(R.drawable.ic_setting_light)
-                .setPriority(2)
-                .setContentTitle(title)
-                .setContentText(txt)
-                .extend(
-                        new NotificationCompat.WearableExtender()
+        switch(minuts) {
+            case 10:
+            {
+                Notification notification = new NotificationCompat.Builder(app)
+                        .setSmallIcon(R.drawable.mr_ic_play_light)
+                        .setPriority(2)
+                        .setContentTitle(title)
+                        .setContentText(txt)
+                        .extend(new NotificationCompat.WearableExtender()
                                 .setHintShowBackgroundOnly(true))
-                                .setPriority(2)
-                                .setSmallIcon(R.drawable.mr_ic_play_light)
-                .build();
+                        .setPriority(2)
+                        .setVibrate(new long[] {1000, 1000, 1000, 1000, 1000})
+                        .build();
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(app);
-        int notificationId = 1;
-        notificationManager.notify(notificationId, notification);
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(app);
+                int notificationId = 1;
+                notificationManager.notify(notificationId, notification);
+                break;
+            }
+            case 5:
+            {
+                Notification notification = new NotificationCompat.Builder(app)
+                        .setSmallIcon(R.drawable.mr_ic_play_light)
+                        .setPriority(2)
+                        .setContentTitle(title)
+                        .setContentText(txt)
+                        .extend(new NotificationCompat.WearableExtender()
+                                .setHintShowBackgroundOnly(true))
+                        .setPriority(2)
+                        .setVibrate(new long[] {1000, 1000})
+                        .build();
+
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(app);
+                int notificationId = 1;
+                notificationManager.notify(notificationId, notification);
+                break;
+            }
+            case 1:
+            {
+                Notification notification = new NotificationCompat.Builder(app)
+                        .setSmallIcon(R.drawable.mr_ic_play_light)
+                        .setPriority(2)
+                        .setContentTitle(title)
+                        .setContentText(txt)
+                        .extend(new NotificationCompat.WearableExtender()
+                                .setHintShowBackgroundOnly(true))
+                        .setPriority(2)
+                        .setVibrate(new long[] {5000})
+                        .build();
+
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(app);
+                int notificationId = 1;
+                notificationManager.notify(notificationId, notification);
+            }
+            default: {
+                Notification notification = new NotificationCompat.Builder(app)
+                        .setSmallIcon(R.drawable.mr_ic_play_light)
+                        .setPriority(2)
+                        .setContentTitle(title)
+                        .setContentText(txt)
+                        .extend(new NotificationCompat.WearableExtender()
+                                        .setHintShowBackgroundOnly(true))
+                        .setPriority(2)
+                        .build();
+
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(app);
+                int notificationId = 1;
+                notificationManager.notify(notificationId, notification);
+            }
+        }
     }
 }

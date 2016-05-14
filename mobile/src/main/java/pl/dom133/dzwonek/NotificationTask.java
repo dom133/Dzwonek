@@ -22,7 +22,6 @@ public class NotificationTask extends AsyncTask<Void, Void, Void> {
     }
 
     protected Void doInBackground(Void... test) {
-        Notifications nf = new Notifications(app);
         try {
             while (true) {
                 if (ts.od_time_list.isEmpty() == false) {
@@ -41,6 +40,7 @@ public class NotificationTask extends AsyncTask<Void, Void, Void> {
                                 int minuts = Integer.valueOf(do_times[1]) - ts.getTime().get(1);
                                 int sec;
                                 minuts = minuts + (hour * 60);
+                                Notifications nf = new Notifications(app, minuts);
                                 sec = (minuts * 60) - ts.getTime().get(2);
                                 if (minuts <= 0) {
                                     i = i + 1;
@@ -67,7 +67,8 @@ public class NotificationTask extends AsyncTask<Void, Void, Void> {
                                 int hour = Integer.valueOf(od_times[0]) - ts.getTime().get(0);
                                 int minuts = Integer.valueOf(od_times[1]) - ts.getTime().get(1);
                                 int sec;
-                                //minuts = minuts + (hour * 60);
+                                minuts = minuts + (hour * 60);
+                                Notifications nf = new Notifications(app, minuts);
                                 sec = (minuts * 60) - ts.getTime().get(2);
                                 Log.i("INFO", "3:"+minuts+" : " + ts.getTime().get(0) + ":" + ts.getTime().get(1));
                                 if (minuts <= 0) {
