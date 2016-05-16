@@ -6,9 +6,6 @@ import android.util.Log;
 
 import java.util.logging.Logger;
 
-/**
- * Created by dom133 on 24.03.2016.
- */
 public class NotificationTask extends AsyncTask<Void, Void, Void> {
 
     Application app;
@@ -31,16 +28,16 @@ public class NotificationTask extends AsyncTask<Void, Void, Void> {
 
                         String[] od_times = ts.od_time_list.get(i).split(":");
                         String[] do_times = ts.do_time_list.get(i).split(":");
+                        Notifications nf = new Notifications(app);
 
                         Log.i("INFO", "1:"+i+" : "+ts.getTime().get(0)+":"+ts.getTime().get(1)+" "+od_times[0]+":"+od_times[1]+" "+do_times[0]+":"+do_times[1]);
-                        if(ts.getTime().get(0)>=Integer.valueOf(od_times[0]) && ts.getTime().get(1)>=Integer.valueOf(od_times[1])) {
+                        if((ts.getTime().get(0)>=Integer.valueOf(od_times[0]) && ts.getTime().get(1)>=Integer.valueOf(od_times[1])) || (ts.getTime().get(0)<=Integer.valueOf(od_times[0]) && ts.getTime().get(1)>=Integer.valueOf(od_times[1]))) {
                             while (true) {
                                 Log.i("INFO", "2 : " + ts.getTime().get(0) + ":" + ts.getTime().get(1));
                                 int hour = Integer.valueOf(do_times[0]) - ts.getTime().get(0);
                                 int minuts = Integer.valueOf(do_times[1]) - ts.getTime().get(1);
                                 int sec;
                                 minuts = minuts + (hour * 60);
-                                Notifications nf = new Notifications(app, minuts);
                                 sec = (minuts * 60) - ts.getTime().get(2);
                                 if (minuts <= 0) {
                                     i = i + 1;
@@ -49,17 +46,17 @@ public class NotificationTask extends AsyncTask<Void, Void, Void> {
                                 }
 
                                 if (sec == 1)
-                                    nf.sendNotification("Czas: " + sec + " sec", "Do dzwonka pozostała " + sec + " sekunda");
+                                    nf.sendNotification("Czas: " + sec + " sec", "Do dzwonka pozostała " + sec + " sekunda", minuts);
                                 else if (sec >= 2 && sec < 5)
-                                    nf.sendNotification("Czas: " + sec + " sec", "Do dzwonka pozostały " + sec + " sekundy");
+                                    nf.sendNotification("Czas: " + sec + " sec", "Do dzwonka pozostały " + sec + " sekundy", minuts);
                                 else if (sec >= 5 && sec <= 60)
-                                    nf.sendNotification("Czas: " + sec + " sec", "Do dzwonka pozostało " + sec + " sekund");
+                                    nf.sendNotification("Czas: " + sec + " sec", "Do dzwonka pozostało " + sec + " sekund", minuts);
                                 else if (minuts == 1)
-                                    nf.sendNotification("Czas: " + minuts + ":" + (60 - ts.getTime().get(2)) + " min", "Do dzwonka pozostała " + minuts + " minuta");
+                                    nf.sendNotification("Czas: " + minuts + ":" + (60 - ts.getTime().get(2)) + " min", "Do dzwonka pozostała " + minuts + " minuta", minuts);
                                 else if (minuts >= 2 && minuts < 5)
-                                    nf.sendNotification("Czas: " + minuts + ":" + (60 - ts.getTime().get(2)) + " min", "Do dzwonka pozostały " + minuts + " minuty");
+                                    nf.sendNotification("Czas: " + minuts + ":" + (60 - ts.getTime().get(2)) + " min", "Do dzwonka pozostały " + minuts + " minuty", minuts);
                                 else if (minuts >= 5)
-                                    nf.sendNotification("Czas: " + minuts + ":" + (60 - ts.getTime().get(2)) + " min", "Do dzwonka pozostało " + minuts + " minut");
+                                    nf.sendNotification("Czas: " + minuts + ":" + (60 - ts.getTime().get(2)) + " min", "Do dzwonka pozostało " + minuts + " minut", minuts);
                                 Thread.sleep(1000);
                             }
                         } else if(ts.getTime().get(0)<=Integer.valueOf(od_times[0]) && ts.getTime().get(1)<Integer.valueOf(od_times[1])) {
@@ -68,7 +65,6 @@ public class NotificationTask extends AsyncTask<Void, Void, Void> {
                                 int minuts = Integer.valueOf(od_times[1]) - ts.getTime().get(1);
                                 int sec;
                                 minuts = minuts + (hour * 60);
-                                Notifications nf = new Notifications(app, minuts);
                                 sec = (minuts * 60) - ts.getTime().get(2);
                                 Log.i("INFO", "3:"+minuts+" : " + ts.getTime().get(0) + ":" + ts.getTime().get(1));
                                 if (minuts <= 0) {
@@ -77,17 +73,17 @@ public class NotificationTask extends AsyncTask<Void, Void, Void> {
                                 }
 
                                 if (sec == 1)
-                                    nf.sendNotification("Czas: " + sec + " sec", "Do dzwonka pozostała " + sec + " sekunda");
+                                    nf.sendNotification("Czas: " + sec + " sec", "Do dzwonka pozostała " + sec + " sekunda", minuts);
                                 else if (sec >= 2 && sec < 5)
-                                    nf.sendNotification("Czas: " + sec + " sec", "Do dzwonka pozostały " + sec + " sekundy");
+                                    nf.sendNotification("Czas: " + sec + " sec", "Do dzwonka pozostały " + sec + " sekundy", minuts);
                                 else if (sec >= 5 && sec <= 60)
-                                    nf.sendNotification("Czas: " + sec + " sec", "Do dzwonka pozostało " + sec + " sekund");
+                                    nf.sendNotification("Czas: " + sec + " sec", "Do dzwonka pozostało " + sec + " sekund", minuts);
                                 else if (minuts == 1)
-                                    nf.sendNotification("Czas: " + minuts + ":" + (60 - ts.getTime().get(2)) + " min", "Do dzwonka pozostała " + minuts + " minuta");
+                                    nf.sendNotification("Czas: " + minuts + ":" + (60 - ts.getTime().get(2)) + " min", "Do dzwonka pozostała " + minuts + " minuta", minuts);
                                 else if (minuts >= 2 && minuts < 5)
-                                    nf.sendNotification("Czas: " + minuts + ":" + (60 - ts.getTime().get(2)) + " min", "Do dzwonka pozostały " + minuts + " minuty");
+                                    nf.sendNotification("Czas: " + minuts + ":" + (60 - ts.getTime().get(2)) + " min", "Do dzwonka pozostały " + minuts + " minuty", minuts);
                                 else if (minuts >= 5)
-                                    nf.sendNotification("Czas: " + minuts + ":" + (60 - ts.getTime().get(2)) + " min", "Do dzwonka pozostało " + minuts + " minut");
+                                    nf.sendNotification("Czas: " + minuts + ":" + (60 - ts.getTime().get(2)) + " min", "Do dzwonka pozostało " + minuts + " minut", minuts);
                                 Thread.sleep(1000);
                             }
                         }

@@ -1,44 +1,24 @@
 package pl.dom133.dzwonek;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.Notification;
-import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.TimePicker;
-
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 public class notification_dzwonek extends AppCompatActivity {
 
@@ -108,35 +88,45 @@ public class notification_dzwonek extends AppCompatActivity {
             public void onClick(View v) {
                 EditText od_time = (EditText)deleteDialogView.findViewById(R.id.od_time);
                 EditText do_time = (EditText)deleteDialogView.findViewById(R.id.do_time);
-                String[] od_time_split = od_time.getText().toString().split(":");
-                String[] do_time_split = do_time.getText().toString().split(":");
-                String od_time_string = null;
-                String do_time_string = null;
-                if(od_time_split[0].charAt(0)=='0') {
-                    if(od_time_split[1].charAt(0)=='0') {od_time_string = od_time_split[0].charAt(1) + ":" + od_time_split[1].charAt(1);}
-                    else {od_time_string = od_time_split[0].charAt(1) + ":" + od_time_split[1];}
-                }
-                else
-                {
-                    if(od_time_split[1].charAt(0)=='0') {od_time_string = od_time_split[0] + ":" + od_time_split[1].charAt(1);}
-                    else {od_time_string = od_time_split[0] + ":" + od_time_split[1];}
-                }
+                if(!od_time.getText().toString().isEmpty() && !do_time.getText().toString().isEmpty()) {
+                    String[] od_time_split = od_time.getText().toString().split(":");
+                    String[] do_time_split = do_time.getText().toString().split(":");
+                    String od_time_string = null;
+                    String do_time_string = null;
+                    if (od_time_split[0].charAt(0) == '0') {
+                        if (od_time_split[1].charAt(0) == '0') {
+                            od_time_string = od_time_split[0].charAt(1) + ":" + od_time_split[1].charAt(1);
+                        } else {
+                            od_time_string = od_time_split[0].charAt(1) + ":" + od_time_split[1];
+                        }
+                    } else {
+                        if (od_time_split[1].charAt(0) == '0') {
+                            od_time_string = od_time_split[0] + ":" + od_time_split[1].charAt(1);
+                        } else {
+                            od_time_string = od_time_split[0] + ":" + od_time_split[1];
+                        }
+                    }
 
-                if(do_time_split[0].charAt(0)=='0') {
-                    if(do_time_split[1].charAt(0)=='0') {do_time_string = do_time_split[0].charAt(1) + ":" + do_time_split[1].charAt(1);}
-                    else {do_time_string = do_time_split[0].charAt(1) + ":" + do_time_split[1];}
-                }
-                else
-                {
-                    if(do_time_split[1].charAt(0)=='0') {do_time_string = do_time_split[0] + ":" + do_time_split[1].charAt(1);}
-                    else {do_time_string = do_time_split[0] + ":" + do_time_split[1];}
-                }
+                    if (do_time_split[0].charAt(0) == '0') {
+                        if (do_time_split[1].charAt(0) == '0') {
+                            do_time_string = do_time_split[0].charAt(1) + ":" + do_time_split[1].charAt(1);
+                        } else {
+                            do_time_string = do_time_split[0].charAt(1) + ":" + do_time_split[1];
+                        }
+                    } else {
+                        if (do_time_split[1].charAt(0) == '0') {
+                            do_time_string = do_time_split[0] + ":" + do_time_split[1].charAt(1);
+                        } else {
+                            do_time_string = do_time_split[0] + ":" + do_time_split[1];
+                        }
+                    }
 
-                ts.od_time_list.add(od_time_string);
-                ts.do_time_list.add(do_time_string);
-                arrayList.add("Od: "+od_time.getText().toString()+" Do: "+do_time.getText().toString());
-                adapter.notifyDataSetChanged();
-                deleteDialog.cancel();
+                    ts.od_time_list.add(od_time_string);
+                    ts.do_time_list.add(do_time_string);
+                    arrayList.add("Od: " + od_time.getText().toString() + " Do: " + do_time.getText().toString());
+                    adapter.notifyDataSetChanged();
+                    deleteDialog.cancel();
+                }
             }
         });
 
@@ -181,13 +171,9 @@ public class notification_dzwonek extends AppCompatActivity {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();
         Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "notification_dzwonek Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
+                Action.TYPE_VIEW,
+                "notification_dzwonek Page",
                 Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
                 Uri.parse("android-app://pl.dom133.dzwonek/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
@@ -200,13 +186,9 @@ public class notification_dzwonek extends AppCompatActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "notification_dzwonek Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
+                Action.TYPE_VIEW,
+                "notification_dzwonek Page",
                 Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
                 Uri.parse("android-app://pl.dom133.dzwonek/http/host/path")
         );
         AppIndex.AppIndexApi.end(client, viewAction);

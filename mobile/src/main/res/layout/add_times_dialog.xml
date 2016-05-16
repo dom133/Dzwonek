@@ -35,21 +35,16 @@
             android:enabled="true"
             android:editable="false"
             android:inputType="none" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <Button
-            android:layout_width="94dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
             android:text="Ok"
             android:id="@+id/button"
             android:clickable="true"
             android:enabled="true"
-            android:layout_marginLeft="120dp" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
     </LinearLayout>
 
 </LinearLayout>
