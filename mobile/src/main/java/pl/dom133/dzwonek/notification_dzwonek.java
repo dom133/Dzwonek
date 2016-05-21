@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +15,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -30,12 +33,8 @@ public class notification_dzwonek extends AppCompatActivity {
     public int count = 1;
     Times ts = new Times();
     File file;
-    FileXML fileXML;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+    Settings settings;
+    NotificationTask nt;
 
 
     @Override
@@ -44,22 +43,39 @@ public class notification_dzwonek extends AppCompatActivity {
         setContentView(R.layout.activity_notification_dzwonek);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //Objects
+        nt = new NotificationTask(getApplication(), ts);
+        settings = new Settings(getApplication());
         ListView vw = (ListView) findViewById(R.id.listView);
+
         arrayList = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
         vw.setAdapter(adapter);
+        Log.i("TEST", String.valueOf(ts.getDay()));
+
+        //Load Settings
+        if(settings.checkExist("List_long")) {
+            Log.i("MAIN", "Load settings");
+            ts.od_time_list = settings.getArray("od");
+            ts.do_time_list = settings.getArray("do");
+            for(int i=0; i<=ts.od_time_list.size()-1; i++) {
+                String[] od_time_split = ts.od_time_list.get(i).split(":");
+                String[] do_time_split = ts.do_time_list.get(i).split(":");
+                String od_time_string = null;
+                String do_time_string = null;
+                if(Integer.valueOf(od_time_split[0])<=9) {od_time_split[0]="0"+od_time_split[0];}
+                if(Integer.valueOf(od_time_split[1])<=9) {od_time_split[1]="0"+od_time_split[1];}
+                if(Integer.valueOf(do_time_split[0])<=9) {do_time_split[0]="0"+do_time_split[0];}
+                if(Integer.valueOf(do_time_split[1])<=9) {do_time_split[1]="0"+do_time_split[1];}
+                od_time_string = od_time_split[0]+":"+od_time_split[1];
+                do_time_string = do_time_split[0]+":"+do_time_split[1];
+                arrayList.add("Od: " + od_time_string + " Do: " + do_time_string);
+                adapter.notifyDataSetChanged();
+            }
+        }
 
         //Notification BackgroundTask
-        NotificationTask nt = new NotificationTask(getApplication(), ts);
         nt.execute();
-
-        file = new File(this.getFilesDir(), "list.xml");
-        fileXML = new FileXML(this.getApplication());
-
-        if(file.exists())
-        {
-
-        } else { fileXML.createXML(); }
 
         LayoutInflater factory = LayoutInflater.from(this);
         final View deleteDialogView = factory.inflate(
@@ -138,7 +154,6 @@ public class notification_dzwonek extends AppCompatActivity {
             }
         });
 
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -158,40 +173,30 @@ public class notification_dzwonek extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if(id == R.id.action_clear_all) {
+            nt.isCancle = true;
+            arrayList.clear();
+            adapter.notifyDataSetChanged();
+            ts.od_time_list.clear();
+            ts.do_time_list.clear();
+            Toast.makeText(getApplication(), "Poprawnie usunięto wszystko", Toast.LENGTH_SHORT).show();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW,
-                "notification_dzwonek Page",
-                Uri.parse("http://host/path"),
-                Uri.parse("android-app://pl.dom133.dzwonek/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }
 
     @Override
     public void onStop() {
         super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW,
-                "notification_dzwonek Page",
-                Uri.parse("http://host/path"),
-                Uri.parse("android-app://pl.dom133.dzwonek/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
+        if(ts.od_time_list.size()!=0) {
+            settings.saveArray("od", ts.od_time_list);
+            settings.saveArray("do", ts.do_time_list);
+            Log.i("MAIN", "Save settings");
+        } else {
+            settings.clearArray("od");
+            settings.clearArray("do");
+        }
     }
 }

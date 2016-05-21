@@ -29,7 +29,7 @@ public class Notifications {
     {
         Notification notification;
         if(minuts == 10 & i==0) {
-            Log.i("NOTIFICATION", "1//"+minuts+":"+i);
+            Log.i("NOTIFICATION", "1. "+minuts+":"+i);
             i++;
             notification = new NotificationCompat.Builder(app)
                     .setSmallIcon(R.drawable.mr_ic_play_light)
@@ -42,7 +42,7 @@ public class Notifications {
                     .setVibrate(new long[] {500, 3000})
                     .build();
         } else if(minuts == 5 & i==1) {
-            Log.i("NOTIFICATION", "2//"+minuts+":"+i);
+            Log.i("NOTIFICATION", "2. "+minuts+":"+i);
             i++;
             notification = new NotificationCompat.Builder(app)
                     .setSmallIcon(R.drawable.mr_ic_play_light)
@@ -55,7 +55,7 @@ public class Notifications {
                     .setVibrate(new long[] {500, 2000})
                     .build();
         } else if(minuts == 1 & i==2) {
-            Log.i("NOTIFICATION", "3//"+minuts+":"+i);
+            Log.i("NOTIFICATION", "3. "+minuts+":"+i);
             i=0;
             notification = new NotificationCompat.Builder(app)
                     .setSmallIcon(R.drawable.mr_ic_play_light)
@@ -68,7 +68,7 @@ public class Notifications {
                     .setVibrate(new long[] {500, 1000})
                     .build();
         } else {
-             Log.i("NOTIFICATION", "4//"+minuts+":"+i);
+             Log.i("NOTIFICATION", "4. "+minuts+":"+i);
              notification = new NotificationCompat.Builder(app)
                     .setSmallIcon(R.drawable.mr_ic_play_light)
                     .setPriority(2)
