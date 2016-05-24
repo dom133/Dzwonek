@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.media.MediaBrowserCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -74,11 +75,13 @@ public class Notifications {
                     .setPriority(2)
                     .setContentTitle(title)
                     .setContentText(txt)
+                     .setVisibility(1)
                     .extend(new NotificationCompat.WearableExtender()
                             .setHintShowBackgroundOnly(true))
                     .setPriority(2)
                     .build();
         }
+        notification.flags |= Notification.FLAG_NO_CLEAR;
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(app);
         int notificationId = 1;
         notificationManager.notify(notificationId, notification);

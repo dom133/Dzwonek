@@ -24,27 +24,27 @@ public class Settings{
         editor.commit();
     }
 
-    public void saveArray(String type, ArrayList<String> list) {
+    public void saveArray(String type, ArrayList<String> list, int day) {
         SharedPreferences settings = app.getSharedPreferences("Dzwonek", 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putInt("List_long", list.size());
+        editor.putInt("List_size["+day+"]", list.size());
         for(int i=0; i<=list.size()-1; i++)
         {
-            editor.putString("List["+type+"]_"+i, list.get(i));
+            editor.putString("List["+type+"]["+day+"]_"+i, list.get(i));
         }
 
         editor.commit();
     }
 
-    public ArrayList<String> getArray(String type) {
+    public ArrayList<String> getArray(String type, int day) {
         SharedPreferences settings;
         ArrayList<String> list = new ArrayList<>();
         settings = app.getSharedPreferences("Dzwonek", 0);
-        int size = settings.getInt("List_long", 0);
+        int size = settings.getInt("List_size["+day+"]", 0);
 
         for(int i=0; i<=size-1; i++)
         {
-            list.add(settings.getString("List["+type+"]_"+i, null));
+            list.add(settings.getString("List["+type+"]["+day+"]_"+i, null));
         }
 
         return list;
@@ -55,14 +55,26 @@ public class Settings{
         return settings.getString(name, null);
     }
 
-    public void clearArray(String type) {
+    public int getInt(String name) {
+        SharedPreferences settings = app.getSharedPreferences("Dzwonek", 0);
+        return settings.getInt(name, 0);
+    }
+
+    public void clear(String name) {
         SharedPreferences settings = app.getSharedPreferences("Dzwonek", 0);
         SharedPreferences.Editor editor = settings.edit();
-        int size = settings.getInt("List_long", 0);
+        editor.remove(name);
+        editor.commit();
+    }
+
+    public void clearArray(String type, int day) {
+        SharedPreferences settings = app.getSharedPreferences("Dzwonek", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        int size = settings.getInt("List_size["+day+"]", 0);
         for(int i=0; i<=size-1; i++) {
-            editor.remove("List["+type+"]_"+i);
+            editor.remove("List["+type+"]["+day+"]_"+i);
         }
-        editor.remove("List_long");
+        editor.remove("List_size["+day+"]");
         editor.commit();
     }
 
