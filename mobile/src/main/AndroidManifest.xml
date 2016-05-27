@@ -20,7 +20,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".SettingsActivity"
             android:label="@string/action_settings"
@@ -28,7 +27,6 @@
             android:parentActivityName=".notification_dzwonek"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-
     </application>
 
 </manifest>

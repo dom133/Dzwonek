@@ -20,11 +20,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.fitness.data.Value;
-
 import java.io.File;
 import java.util.ArrayList;
 
@@ -36,10 +31,10 @@ public class notification_dzwonek extends AppCompatActivity {
 
     //Variables public
     public int count = 1;
-    Times ts = new Times();
-    File file;
-    Settings settings;
-    NotificationTask nt;
+    public Times ts = new Times();
+    public Settings settings;
+    public NotificationTask nt;
+    public File file;
 
 
     @Override
@@ -151,6 +146,8 @@ public class notification_dzwonek extends AppCompatActivity {
         Log.i("MAIN", "Load Settings");
         //Notification BackgroundTask
         nt.execute();
+        SaveTask st = new SaveTask(settings, nt, ts, getApplication());
+        st.execute();
 
         LayoutInflater factory = LayoutInflater.from(this);
         final View addDialogView = factory.inflate(
@@ -205,6 +202,10 @@ public class notification_dzwonek extends AppCompatActivity {
                                 if(Integer.valueOf(do_times[1])<=9) do_times[1] = "0"+do_times[1];
                                 arrayList.add(" "+i+". "+od_times[0]+":"+od_times[1]+"-->"+do_times[0]+":"+do_times[1]);
                             }
+                            settings.clearArray("od", 1);
+                            settings.clearArray("do", 1);
+                            settings.saveArray("od", ts.od_time_list_1, 1);
+                            settings.saveArray("do", ts.do_time_list_1, 1);
                             arrayList.add("");
                             adapter.notifyDataSetChanged();
                             break;
@@ -235,6 +236,10 @@ public class notification_dzwonek extends AppCompatActivity {
                                     if(Integer.valueOf(do_times[1])<=9) do_times[1] = "0"+do_times[1];
                                     arrayList.add(" "+i+". "+od_times[0]+":"+od_times[1]+"-->"+do_times[0]+":"+do_times[1]);
                                 }
+                                settings.clearArray("od", 2);
+                                settings.clearArray("do", 2);
+                                settings.saveArray("od", ts.od_time_list_2, 2);
+                                settings.saveArray("do", ts.do_time_list_2, 2);
                                 arrayList.add("");
                                 adapter.notifyDataSetChanged();
                                 break;
@@ -270,6 +275,10 @@ public class notification_dzwonek extends AppCompatActivity {
                                     if(Integer.valueOf(do_times[1])<=9) do_times[1] = "0"+do_times[1];
                                     arrayList.add(" "+i+". "+od_times[0]+":"+od_times[1]+"-->"+do_times[0]+":"+do_times[1]);
                                 }
+                                settings.clearArray("od", 3);
+                                settings.clearArray("do", 3);
+                                settings.saveArray("od", ts.od_time_list_3, 3);
+                                settings.saveArray("do", ts.do_time_list_3, 3);
                                 arrayList.add("");
                                 adapter.notifyDataSetChanged();
                                 break;
@@ -305,6 +314,10 @@ public class notification_dzwonek extends AppCompatActivity {
                                     if(Integer.valueOf(do_times[1])<=9) do_times[1] = "0"+do_times[1];
                                     arrayList.add(" "+i+". "+od_times[0]+":"+od_times[1]+"-->"+do_times[0]+":"+do_times[1]);
                                 }
+                                settings.clearArray("od", 4);
+                                settings.clearArray("do", 4);
+                                settings.saveArray("od", ts.od_time_list_4, 4);
+                                settings.saveArray("do", ts.do_time_list_4, 4);
                                 arrayList.add("");
                                 adapter.notifyDataSetChanged();
                                 break;
@@ -340,6 +353,10 @@ public class notification_dzwonek extends AppCompatActivity {
                                     if(Integer.valueOf(do_times[1])<=9) do_times[1] = "0"+do_times[1];
                                     arrayList.add(" "+i+". "+od_times[0]+":"+od_times[1]+"-->"+do_times[0]+":"+do_times[1]);
                                 }
+                                settings.clearArray("od", 5);
+                                settings.clearArray("do", 5);
+                                settings.saveArray("od", ts.od_time_list_5, 5);
+                                settings.saveArray("do", ts.do_time_list_5, 5);
                                 arrayList.add("");
                                 adapter.notifyDataSetChanged();
                                 break;
@@ -355,6 +372,8 @@ public class notification_dzwonek extends AppCompatActivity {
                         }
                     }
                 }
+                settings.saveString("Wait", String.valueOf(nt.wait));
+                settings.saveString("Zmienna", nt.zmienna);
                 addDialog.cancel();
             }
         });
@@ -387,81 +406,17 @@ public class notification_dzwonek extends AppCompatActivity {
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
-        } else if(id == R.id.action_clear_all) {
+        } else if (id == R.id.action_clear_all) {
             nt.isCancle = true;
             arrayList.clear();
             adapter.notifyDataSetChanged();
             ts.od_time_list_1.clear();ts.do_time_list_1.clear();ts.od_time_list_2.clear();ts.do_time_list_2.clear();ts.od_time_list_3.clear();ts.do_time_list_3.clear();ts.od_time_list_4.clear();ts.do_time_list_4.clear();ts.od_time_list_5.clear();ts.do_time_list_5.clear();
+            settings.clearArray("od", 1);settings.clearArray("do", 1);settings.clearArray("od", 2);settings.clearArray("do", 2);settings.clearArray("od", 3);settings.clearArray("do", 3);settings.clearArray("od", 4);settings.clearArray("do", 4);settings.clearArray("od", 5);settings.clearArray("do", 5);
             new Notifications(getApplication()).cancleNotification();
             Toast.makeText(getApplication(), "Poprawnie usunięto wszystko", Toast.LENGTH_SHORT).show();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        nt.isCancle = true;
-        if(ts.od_time_list_1.size()!=0) {
-            settings.clearArray("od", 1);
-            settings.clearArray("do", 1);
-            settings.saveArray("od", ts.od_time_list_1, 1);
-            settings.saveArray("do", ts.do_time_list_1, 1);
-            Log.i("MAIN", "Save  settings 1");
-        } else {
-            settings.clearArray("od", 1);
-            settings.clearArray("do", 1);
-            Log.i("MAIN", "Clear  settings 1");
-        }
-        if(ts.od_time_list_2.size()!=0) {
-            settings.clearArray("od", 2);
-            settings.clearArray("do", 2);
-            settings.saveArray("od", ts.od_time_list_2, 2);
-            settings.saveArray("do", ts.do_time_list_2, 2);
-            Log.i("MAIN", "Save  settings 2");
-        } else {
-            settings.clearArray("od", 2);
-            settings.clearArray("do", 2);
-            Log.i("MAIN", "Clear  settings 2");
-        }
-        if(ts.od_time_list_3.size()!=0) {
-            settings.clearArray("od", 3);
-            settings.clearArray("do", 3);
-            settings.saveArray("od", ts.od_time_list_3, 3);
-            settings.saveArray("do", ts.do_time_list_3, 3);
-            Log.i("MAIN", "Save  settings 3");
-        } else {
-            settings.clearArray("od", 3);
-            settings.clearArray("do", 3);
-            Log.i("MAIN", "Clear  settings 3");
-        }
-        if(ts.od_time_list_4.size()!=0) {
-            settings.clearArray("od", 4);
-            settings.clearArray("do", 4);
-            settings.saveArray("od", ts.od_time_list_4, 4);
-            settings.saveArray("do", ts.do_time_list_4, 4);
-            Log.i("MAIN", "Save  settings 4");
-        } else {
-            settings.clearArray("od", 4);
-            settings.clearArray("do", 4);
-            Log.i("MAIN", "Clear  settings 4");
-        }
-        if(ts.od_time_list_5.size()!=0) {
-            settings.clearArray("od", 5);
-            settings.clearArray("do", 5);
-            settings.saveArray("od", ts.od_time_list_5, 5);
-            settings.saveArray("do", ts.do_time_list_5, 5);
-            Log.i("MAIN", "Save settings 5");
-        } else {
-            settings.clearArray("od", 5);
-            settings.clearArray("do", 5);
-            Log.i("MAIN", "Clear  settings 5");
-        }
-        new Notifications(getApplication()).cancleNotification();
-        settings.saveString("Wait", String.valueOf(nt.wait));
-        settings.saveString("Zmienna", nt.zmienna);
-        Log.i("MAIN", "Save all settings");
     }
 }
