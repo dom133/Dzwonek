@@ -20,6 +20,15 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -28,9 +37,9 @@ public class notification_dzwonek extends AppCompatActivity {
     //Variables private
     private ArrayAdapter<String> adapter;
     private ArrayList<String> arrayList;
+    private GoogleApiClient mGoogleApiClient;
 
     //Variables public
-    public int count = 1;
     public Times ts = new Times();
     public Settings settings;
     public NotificationTask nt;
@@ -52,102 +61,122 @@ public class notification_dzwonek extends AppCompatActivity {
         adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
         vw.setAdapter(adapter);
         //Load Settings
-        if(settings.getInt("List_size[1]")!=0) {
+        if (settings.getInt("List_size[1]") != 0) {
             int size = settings.getInt("List_size[1]");
             ts.od_time_list_1 = settings.getArray("od", 1);
             ts.do_time_list_1 = settings.getArray("do", 1);
             arrayList.add("Poniedziałek: ");
-            for(int i=0; i<=size-1; i++) {
+            for (int i = 0; i <= size - 1; i++) {
                 String[] od_times = ts.od_time_list_1.get(i).split(":");
                 String[] do_times = ts.do_time_list_1.get(i).split(":");
-                if(Integer.valueOf(od_times[0])<=9) od_times[0] = "0"+od_times[0];
-                if(Integer.valueOf(od_times[1])<=9) od_times[1] = "0"+od_times[1];
-                if(Integer.valueOf(do_times[0])<=9) do_times[0] = "0"+do_times[0];
-                if(Integer.valueOf(do_times[1])<=9) do_times[1] = "0"+do_times[1];
-                arrayList.add(" "+(i+1)+". "+od_times[0]+":"+od_times[1]+"-->"+do_times[0]+":"+do_times[1]);
+                if (Integer.valueOf(od_times[0]) <= 9) od_times[0] = "0" + od_times[0];
+                if (Integer.valueOf(od_times[1]) <= 9) od_times[1] = "0" + od_times[1];
+                if (Integer.valueOf(do_times[0]) <= 9) do_times[0] = "0" + do_times[0];
+                if (Integer.valueOf(do_times[1]) <= 9) do_times[1] = "0" + do_times[1];
+                arrayList.add(" " + (i + 1) + ". " + od_times[0] + ":" + od_times[1] + "-->" + do_times[0] + ":" + do_times[1]);
             }
             arrayList.add("");
             adapter.notifyDataSetChanged();
         }
 
-        if(settings.getInt("List_size[2]")!=0) {
+        if (settings.getInt("List_size[2]") != 0) {
             int size = settings.getInt("List_size[2]");
             ts.od_time_list_2 = settings.getArray("od", 2);
             ts.do_time_list_2 = settings.getArray("do", 2);
             arrayList.add("Wtorek: ");
-            for(int i=0; i<=size-1; i++) {
+            for (int i = 0; i <= size - 1; i++) {
                 String[] od_times = ts.od_time_list_2.get(i).split(":");
                 String[] do_times = ts.do_time_list_2.get(i).split(":");
-                if(Integer.valueOf(od_times[0])<=9) od_times[0] = "0"+od_times[0];
-                if(Integer.valueOf(od_times[1])<=9) od_times[1] = "0"+od_times[1];
-                if(Integer.valueOf(do_times[0])<=9) do_times[0] = "0"+do_times[0];
-                if(Integer.valueOf(do_times[1])<=9) do_times[1] = "0"+do_times[1];
-                arrayList.add(" "+(i+1)+". "+od_times[0]+":"+od_times[1]+"-->"+do_times[0]+":"+do_times[1]);
+                if (Integer.valueOf(od_times[0]) <= 9) od_times[0] = "0" + od_times[0];
+                if (Integer.valueOf(od_times[1]) <= 9) od_times[1] = "0" + od_times[1];
+                if (Integer.valueOf(do_times[0]) <= 9) do_times[0] = "0" + do_times[0];
+                if (Integer.valueOf(do_times[1]) <= 9) do_times[1] = "0" + do_times[1];
+                arrayList.add(" " + (i + 1) + ". " + od_times[0] + ":" + od_times[1] + "-->" + do_times[0] + ":" + do_times[1]);
             }
             arrayList.add("");
             adapter.notifyDataSetChanged();
         }
 
-        if(settings.getInt("List_size[3]")!=0) {
+        if (settings.getInt("List_size[3]") != 0) {
             int size = settings.getInt("List_size[3]");
             ts.od_time_list_3 = settings.getArray("od", 3);
             ts.do_time_list_3 = settings.getArray("do", 3);
             arrayList.add("Środa: ");
-            for(int i=0; i<=size-1; i++) {
+            for (int i = 0; i <= size - 1; i++) {
                 String[] od_times = ts.od_time_list_3.get(i).split(":");
                 String[] do_times = ts.do_time_list_3.get(i).split(":");
-                if(Integer.valueOf(od_times[0])<=9) od_times[0] = "0"+od_times[0];
-                if(Integer.valueOf(od_times[1])<=9) od_times[1] = "0"+od_times[1];
-                if(Integer.valueOf(do_times[0])<=9) do_times[0] = "0"+do_times[0];
-                if(Integer.valueOf(do_times[1])<=9) do_times[1] = "0"+do_times[1];
-                arrayList.add(" "+(i+1)+". "+od_times[0]+":"+od_times[1]+"-->"+do_times[0]+":"+do_times[1]);
+                if (Integer.valueOf(od_times[0]) <= 9) od_times[0] = "0" + od_times[0];
+                if (Integer.valueOf(od_times[1]) <= 9) od_times[1] = "0" + od_times[1];
+                if (Integer.valueOf(do_times[0]) <= 9) do_times[0] = "0" + do_times[0];
+                if (Integer.valueOf(do_times[1]) <= 9) do_times[1] = "0" + do_times[1];
+                arrayList.add(" " + (i + 1) + ". " + od_times[0] + ":" + od_times[1] + "-->" + do_times[0] + ":" + do_times[1]);
             }
             arrayList.add("");
             adapter.notifyDataSetChanged();
         }
 
-        if(settings.getInt("List_size[4]")!=0) {
+        if (settings.getInt("List_size[4]") != 0) {
             int size = settings.getInt("List_size[4]");
-            ts.od_time_list_1 = settings.getArray("od", 4);
-            ts.do_time_list_1 = settings.getArray("do", 4);
+            ts.od_time_list_4 = settings.getArray("od", 4);
+            ts.do_time_list_4 = settings.getArray("do", 4);
             arrayList.add("Czwartek: ");
-            for(int i=0; i<=size-1; i++) {
+            for (int i = 0; i <= size - 1; i++) {
                 String[] od_times = ts.od_time_list_4.get(i).split(":");
                 String[] do_times = ts.do_time_list_4.get(i).split(":");
-                if(Integer.valueOf(od_times[0])<=9) od_times[0] = "0"+od_times[0];
-                if(Integer.valueOf(od_times[1])<=9) od_times[1] = "0"+od_times[1];
-                if(Integer.valueOf(do_times[0])<=9) do_times[0] = "0"+do_times[0];
-                if(Integer.valueOf(do_times[1])<=9) do_times[1] = "0"+do_times[1];
-                arrayList.add(" "+(i+1)+". "+od_times[0]+":"+od_times[1]+"-->"+do_times[0]+":"+do_times[1]);
+                if (Integer.valueOf(od_times[0]) <= 9) od_times[0] = "0" + od_times[0];
+                if (Integer.valueOf(od_times[1]) <= 9) od_times[1] = "0" + od_times[1];
+                if (Integer.valueOf(do_times[0]) <= 9) do_times[0] = "0" + do_times[0];
+                if (Integer.valueOf(do_times[1]) <= 9) do_times[1] = "0" + do_times[1];
+                arrayList.add(" " + (i + 1) + ". " + od_times[0] + ":" + od_times[1] + "-->" + do_times[0] + ":" + do_times[1]);
             }
             arrayList.add("");
             adapter.notifyDataSetChanged();
         }
 
-        if(settings.getInt("List_size[5]")!=0) {
+        if (settings.getInt("List_size[5]") != 0) {
             int size = settings.getInt("List_size[5]");
             ts.od_time_list_5 = settings.getArray("od", 5);
             ts.do_time_list_5 = settings.getArray("do", 5);
             arrayList.add("Piątek: ");
-            for(int i=0; i<=size-1; i++) {
+            for (int i = 0; i <= size - 1; i++) {
                 String[] od_times = ts.od_time_list_5.get(i).split(":");
                 String[] do_times = ts.do_time_list_5.get(i).split(":");
-                if(Integer.valueOf(od_times[0])<=9) od_times[0] = "0"+od_times[0];
-                if(Integer.valueOf(od_times[1])<=9) od_times[1] = "0"+od_times[1];
-                if(Integer.valueOf(do_times[0])<=9) do_times[0] = "0"+do_times[0];
-                if(Integer.valueOf(do_times[1])<=9) do_times[1] = "0"+do_times[1];
-                arrayList.add(" "+(i+1)+". "+od_times[0]+":"+od_times[1]+"-->"+do_times[0]+":"+do_times[1]);
+                if (Integer.valueOf(od_times[0]) <= 9) od_times[0] = "0" + od_times[0];
+                if (Integer.valueOf(od_times[1]) <= 9) od_times[1] = "0" + od_times[1];
+                if (Integer.valueOf(do_times[0]) <= 9) do_times[0] = "0" + do_times[0];
+                if (Integer.valueOf(do_times[1]) <= 9) do_times[1] = "0" + do_times[1];
+                arrayList.add(" " + (i + 1) + ". " + od_times[0] + ":" + od_times[1] + "-->" + do_times[0] + ":" + do_times[1]);
             }
             arrayList.add("");
             adapter.notifyDataSetChanged();
         }
-        if(settings.checkExist("Wait")) nt.wait = Integer.valueOf(settings.getString("Wait"));
-        if(settings.checkExist("Zmienna")) nt.zmienna = settings.getString("Zmienna");
+        if (settings.checkExist("Wait")) nt.wait = settings.getInt("Wait");
+        if (settings.checkExist("Zmienna")) nt.zmienna = settings.getString("Zmienna");
         Log.i("MAIN", "Load Settings");
         //Notification BackgroundTask
         nt.execute();
-        SaveTask st = new SaveTask(settings, nt, ts, getApplication());
-        st.execute();
+
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(Bundle connectionHint) {
+                        Log.i("WEAR", "onConnected: " + connectionHint);
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int cause) {
+                        Log.i("WEAR", "onConnectionSuspended: " + cause);
+                    }
+                })
+                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(ConnectionResult result) {
+                        Log.i("WEAR", "onConnectionFailed: " + result);
+                    }
+                })
+                .addApiIfAvailable(Wearable.API)
+                .build();
 
         LayoutInflater factory = LayoutInflater.from(this);
         final View addDialogView = factory.inflate(
@@ -175,32 +204,32 @@ public class notification_dzwonek extends AppCompatActivity {
         addDialogView.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Spinner day = (Spinner)addDialog.findViewById(R.id.day_txt);
-                Spinner lesson = (Spinner)addDialog.findViewById(R.id.lesson_txt);
+                Spinner day = (Spinner) addDialog.findViewById(R.id.day_txt);
+                Spinner lesson = (Spinner) addDialog.findViewById(R.id.lesson_txt);
                 int lesson_int = Integer.valueOf(lesson.getSelectedItem().toString());
-                Log.i("DIALOG", "Day: "+day.getSelectedItem().toString());
-                Log.i("DIALOG", "Lesson: "+lesson_int);
-                switch(day.getSelectedItem().toString())
-                {
-                    case "Poniedziałek":
-                    {
+                Log.i("DIALOG", "Day: " + day.getSelectedItem().toString());
+                Log.i("DIALOG", "Lesson: " + lesson_int);
+                switch (day.getSelectedItem().toString()) {
+                    case "Poniedziałek": {
                         Log.i("DIALOG", "Poniedzialek: 1");
-                        if(ts.od_time_list_1.size()==0)
-                        {
+                        if (ts.od_time_list_1.size() == 0) {
                             Log.i("DIALOG", "Poniedzialek: 2");
                             ts.od_time_list_1 = ts.getLesson(lesson_int, "od");
                             ts.do_time_list_1 = ts.getLesson(lesson_int, "do");
                             arrayList.add("Poniedziałek: ");
-                            for(int i=1; i<=lesson_int; i++)
-                            {
-                                Log.i("DIALOG", "Poniedzialek: 3:"+i);
-                                String[] od_times = ts.od_time_list_1.get(i-1).split(":");
-                                String[] do_times = ts.do_time_list_1.get(i-1).split(":");
-                                if(Integer.valueOf(od_times[0])<=9) od_times[0] = "0"+od_times[0];
-                                if(Integer.valueOf(od_times[1])<=9) od_times[1] = "0"+od_times[1];
-                                if(Integer.valueOf(do_times[0])<=9) do_times[0] = "0"+do_times[0];
-                                if(Integer.valueOf(do_times[1])<=9) do_times[1] = "0"+do_times[1];
-                                arrayList.add(" "+i+". "+od_times[0]+":"+od_times[1]+"-->"+do_times[0]+":"+do_times[1]);
+                            for (int i = 1; i <= lesson_int; i++) {
+                                Log.i("DIALOG", "Poniedzialek: 3:" + i);
+                                String[] od_times = ts.od_time_list_1.get(i - 1).split(":");
+                                String[] do_times = ts.do_time_list_1.get(i - 1).split(":");
+                                if (Integer.valueOf(od_times[0]) <= 9)
+                                    od_times[0] = "0" + od_times[0];
+                                if (Integer.valueOf(od_times[1]) <= 9)
+                                    od_times[1] = "0" + od_times[1];
+                                if (Integer.valueOf(do_times[0]) <= 9)
+                                    do_times[0] = "0" + do_times[0];
+                                if (Integer.valueOf(do_times[1]) <= 9)
+                                    do_times[1] = "0" + do_times[1];
+                                arrayList.add(" " + i + ". " + od_times[0] + ":" + od_times[1] + "-->" + do_times[0] + ":" + do_times[1]);
                             }
                             settings.clearArray("od", 1);
                             settings.clearArray("do", 1);
@@ -215,26 +244,28 @@ public class notification_dzwonek extends AppCompatActivity {
                             break;
                         }
                     }
-                    case "Wtorek":
-                    {
+                    case "Wtorek": {
                         Log.i("DIALOG", "Wtorek: 1");
-                        if(ts.od_time_list_1.size()!=0) {
+                        if (ts.od_time_list_1.size() != 0) {
                             Log.i("DIALOG", "Wtorek: 2");
                             if (ts.od_time_list_2.size() == 0) {
                                 Log.i("DIALOG", "Wtorek: 3");
                                 ts.od_time_list_2 = ts.getLesson(lesson_int, "od");
                                 ts.do_time_list_2 = ts.getLesson(lesson_int, "do");
                                 arrayList.add("Wtorek: ");
-                                for(int i=1; i<=lesson_int; i++)
-                                {
-                                    Log.i("DIALOG", "Wtorek: 4:"+i);
-                                    String[] od_times = ts.od_time_list_2.get(i-1).split(":");
-                                    String[] do_times = ts.do_time_list_2.get(i-1).split(":");
-                                    if(Integer.valueOf(od_times[0])<=9) od_times[0] = "0"+od_times[0];
-                                    if(Integer.valueOf(od_times[1])<=9) od_times[1] = "0"+od_times[1];
-                                    if(Integer.valueOf(do_times[0])<=9) do_times[0] = "0"+do_times[0];
-                                    if(Integer.valueOf(do_times[1])<=9) do_times[1] = "0"+do_times[1];
-                                    arrayList.add(" "+i+". "+od_times[0]+":"+od_times[1]+"-->"+do_times[0]+":"+do_times[1]);
+                                for (int i = 1; i <= lesson_int; i++) {
+                                    Log.i("DIALOG", "Wtorek: 4:" + i);
+                                    String[] od_times = ts.od_time_list_2.get(i - 1).split(":");
+                                    String[] do_times = ts.do_time_list_2.get(i - 1).split(":");
+                                    if (Integer.valueOf(od_times[0]) <= 9)
+                                        od_times[0] = "0" + od_times[0];
+                                    if (Integer.valueOf(od_times[1]) <= 9)
+                                        od_times[1] = "0" + od_times[1];
+                                    if (Integer.valueOf(do_times[0]) <= 9)
+                                        do_times[0] = "0" + do_times[0];
+                                    if (Integer.valueOf(do_times[1]) <= 9)
+                                        do_times[1] = "0" + do_times[1];
+                                    arrayList.add(" " + i + ". " + od_times[0] + ":" + od_times[1] + "-->" + do_times[0] + ":" + do_times[1]);
                                 }
                                 settings.clearArray("od", 2);
                                 settings.clearArray("do", 2);
@@ -254,26 +285,28 @@ public class notification_dzwonek extends AppCompatActivity {
                             break;
                         }
                     }
-                    case "Środa":
-                    {
+                    case "Środa": {
                         Log.i("DIALOG", "Sroda: 1");
-                        if(ts.od_time_list_2.size()!=0) {
+                        if (ts.od_time_list_2.size() != 0) {
                             Log.i("DIALOG", "Sroda: 2");
                             if (ts.od_time_list_3.size() == 0) {
                                 Log.i("DIALOG", "Sroda: 3");
                                 ts.od_time_list_3 = ts.getLesson(lesson_int, "od");
                                 ts.do_time_list_3 = ts.getLesson(lesson_int, "do");
                                 arrayList.add("Środa: ");
-                                for(int i=1; i<=lesson_int; i++)
-                                {
-                                    Log.i("DIALOG", "Sroda: 4:"+i);
-                                    String[] od_times = ts.od_time_list_3.get(i-1).split(":");
-                                    String[] do_times = ts.do_time_list_3.get(i-1).split(":");
-                                    if(Integer.valueOf(od_times[0])<=9) od_times[0] = "0"+od_times[0];
-                                    if(Integer.valueOf(od_times[1])<=9) od_times[1] = "0"+od_times[1];
-                                    if(Integer.valueOf(do_times[0])<=9) do_times[0] = "0"+do_times[0];
-                                    if(Integer.valueOf(do_times[1])<=9) do_times[1] = "0"+do_times[1];
-                                    arrayList.add(" "+i+". "+od_times[0]+":"+od_times[1]+"-->"+do_times[0]+":"+do_times[1]);
+                                for (int i = 1; i <= lesson_int; i++) {
+                                    Log.i("DIALOG", "Sroda: 4:" + i);
+                                    String[] od_times = ts.od_time_list_3.get(i - 1).split(":");
+                                    String[] do_times = ts.do_time_list_3.get(i - 1).split(":");
+                                    if (Integer.valueOf(od_times[0]) <= 9)
+                                        od_times[0] = "0" + od_times[0];
+                                    if (Integer.valueOf(od_times[1]) <= 9)
+                                        od_times[1] = "0" + od_times[1];
+                                    if (Integer.valueOf(do_times[0]) <= 9)
+                                        do_times[0] = "0" + do_times[0];
+                                    if (Integer.valueOf(do_times[1]) <= 9)
+                                        do_times[1] = "0" + do_times[1];
+                                    arrayList.add(" " + i + ". " + od_times[0] + ":" + od_times[1] + "-->" + do_times[0] + ":" + do_times[1]);
                                 }
                                 settings.clearArray("od", 3);
                                 settings.clearArray("do", 3);
@@ -293,26 +326,28 @@ public class notification_dzwonek extends AppCompatActivity {
                             break;
                         }
                     }
-                    case "Czwartek":
-                    {
+                    case "Czwartek": {
                         Log.i("DIALOG", "Czwartek: 1");
-                        if(ts.od_time_list_3.size()!=0) {
+                        if (ts.od_time_list_3.size() != 0) {
                             Log.i("DIALOG", "Czwartek: 2");
                             if (ts.od_time_list_4.size() == 0) {
                                 Log.i("DIALOG", "Czwartek: 3");
                                 ts.od_time_list_4 = ts.getLesson(lesson_int, "od");
                                 ts.do_time_list_4 = ts.getLesson(lesson_int, "do");
                                 arrayList.add("Czwartek: ");
-                                for(int i=1; i<=lesson_int; i++)
-                                {
-                                    Log.i("DIALOG", "Czwartek: 4:"+i);
-                                    String[] od_times = ts.od_time_list_4.get(i-1).split(":");
-                                    String[] do_times = ts.do_time_list_4.get(i-1).split(":");
-                                    if(Integer.valueOf(od_times[0])<=9) od_times[0] = "0"+od_times[0];
-                                    if(Integer.valueOf(od_times[1])<=9) od_times[1] = "0"+od_times[1];
-                                    if(Integer.valueOf(do_times[0])<=9) do_times[0] = "0"+do_times[0];
-                                    if(Integer.valueOf(do_times[1])<=9) do_times[1] = "0"+do_times[1];
-                                    arrayList.add(" "+i+". "+od_times[0]+":"+od_times[1]+"-->"+do_times[0]+":"+do_times[1]);
+                                for (int i = 1; i <= lesson_int; i++) {
+                                    Log.i("DIALOG", "Czwartek: 4:" + i);
+                                    String[] od_times = ts.od_time_list_4.get(i - 1).split(":");
+                                    String[] do_times = ts.do_time_list_4.get(i - 1).split(":");
+                                    if (Integer.valueOf(od_times[0]) <= 9)
+                                        od_times[0] = "0" + od_times[0];
+                                    if (Integer.valueOf(od_times[1]) <= 9)
+                                        od_times[1] = "0" + od_times[1];
+                                    if (Integer.valueOf(do_times[0]) <= 9)
+                                        do_times[0] = "0" + do_times[0];
+                                    if (Integer.valueOf(do_times[1]) <= 9)
+                                        do_times[1] = "0" + do_times[1];
+                                    arrayList.add(" " + i + ". " + od_times[0] + ":" + od_times[1] + "-->" + do_times[0] + ":" + do_times[1]);
                                 }
                                 settings.clearArray("od", 4);
                                 settings.clearArray("do", 4);
@@ -332,26 +367,28 @@ public class notification_dzwonek extends AppCompatActivity {
                             break;
                         }
                     }
-                    case "Piątek":
-                    {
+                    case "Piątek": {
                         Log.i("DIALOG", "Piatek: 1");
-                        if(ts.od_time_list_4.size()!=0) {
+                        if (ts.od_time_list_4.size() != 0) {
                             Log.i("DIALOG", "Piatek: 2");
                             if (ts.od_time_list_5.size() == 0) {
                                 Log.i("DIALOG", "Piatek: 3");
                                 ts.od_time_list_5 = ts.getLesson(lesson_int, "od");
                                 ts.do_time_list_5 = ts.getLesson(lesson_int, "do");
                                 arrayList.add("Piątek: ");
-                                for(int i=1; i<=lesson_int; i++)
-                                {
-                                    Log.i("DIALOG", "Piatek: 4:"+i);
-                                    String[] od_times = ts.od_time_list_5.get(i-1).split(":");
-                                    String[] do_times = ts.do_time_list_5.get(i-1).split(":");
-                                    if(Integer.valueOf(od_times[0])<=9) od_times[0] = "0"+od_times[0];
-                                    if(Integer.valueOf(od_times[1])<=9) od_times[1] = "0"+od_times[1];
-                                    if(Integer.valueOf(do_times[0])<=9) do_times[0] = "0"+do_times[0];
-                                    if(Integer.valueOf(do_times[1])<=9) do_times[1] = "0"+do_times[1];
-                                    arrayList.add(" "+i+". "+od_times[0]+":"+od_times[1]+"-->"+do_times[0]+":"+do_times[1]);
+                                for (int i = 1; i <= lesson_int; i++) {
+                                    Log.i("DIALOG", "Piatek: 4:" + i);
+                                    String[] od_times = ts.od_time_list_5.get(i - 1).split(":");
+                                    String[] do_times = ts.do_time_list_5.get(i - 1).split(":");
+                                    if (Integer.valueOf(od_times[0]) <= 9)
+                                        od_times[0] = "0" + od_times[0];
+                                    if (Integer.valueOf(od_times[1]) <= 9)
+                                        od_times[1] = "0" + od_times[1];
+                                    if (Integer.valueOf(do_times[0]) <= 9)
+                                        do_times[0] = "0" + do_times[0];
+                                    if (Integer.valueOf(do_times[1]) <= 9)
+                                        do_times[1] = "0" + do_times[1];
+                                    arrayList.add(" " + i + ". " + od_times[0] + ":" + od_times[1] + "-->" + do_times[0] + ":" + do_times[1]);
                                 }
                                 settings.clearArray("od", 5);
                                 settings.clearArray("do", 5);
@@ -379,30 +416,27 @@ public class notification_dzwonek extends AppCompatActivity {
         });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addDialog.show();
-            }
-        });
+        if (fab != null) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    addDialog.show();
+                }
+            });
+        }
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_notification_dzwonek, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
@@ -418,5 +452,17 @@ public class notification_dzwonek extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
     }
 }
