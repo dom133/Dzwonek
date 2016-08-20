@@ -1,5 +1,3 @@
 <resources>
     <string name="app_name">Dzwonek</string>
-    <string name="action_settings">Ustawienia</string>
-    <string name="action_clear_all">Usuń wszystko</string>
 </resources>
