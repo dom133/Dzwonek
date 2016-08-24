@@ -43,41 +43,46 @@ public class Settings extends AppCompatActivity {
 
                 switch (i) {
                     case 0: {
-                        sPref.edit().putInt("wait", (1000*60)).commit();
+                        sPref.edit().putInt("wait", 1000).commit();
                         break;
                     }
 
                     case 1: {
-                        sPref.edit().putInt("wait", (1000*60)*5).commit();
+                        sPref.edit().putInt("wait", (1000*60)).commit();
                         break;
                     }
 
                     case 2: {
-                        sPref.edit().putInt("wait", (1000*60)*10).commit();
+                        sPref.edit().putInt("wait", (1000*60)*5).commit();
                         break;
                     }
 
                     case 3: {
-                        sPref.edit().putInt("wait", (1000*60)*15).commit();
+                        sPref.edit().putInt("wait", (1000*60)*10).commit();
                         break;
                     }
 
                     case 4: {
-                        sPref.edit().putInt("wait", (1000*60)*30).commit();
+                        sPref.edit().putInt("wait", (1000*60)*15).commit();
                         break;
                     }
 
                     case 5: {
-                        sPref.edit().putInt("wait", (1000*60)*60).commit();
+                        sPref.edit().putInt("wait", (1000*60)*30).commit();
                         break;
                     }
 
                     case 6: {
-                        sPref.edit().putInt("wait", (1000*60)*120).commit();
+                        sPref.edit().putInt("wait", (1000*60)*60).commit();
                         break;
                     }
 
                     case 7: {
+                        sPref.edit().putInt("wait", (1000*60)*120).commit();
+                        break;
+                    }
+
+                    case 8: {
                         sPref.edit().putInt("wait", (1000*60)*240).commit();
                         break;
                     }
@@ -95,6 +100,7 @@ public class Settings extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         startActivity(new Intent(this, Main.class));
+        this.finish();
         return true;
     }
 }

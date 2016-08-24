@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,15 +21,25 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
+
 import java.util.ArrayList;
 
-public class Main extends AppCompatActivity {
+public class Main extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
 
     private ArrayAdapter<String> adapter_list = null;
     private ArrayList<String> arrayList = new ArrayList<>();
     private Time time = new Time();
     private SharedPreferences sPref;
+    private GoogleApiClient googleApiClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +47,13 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //GoogleApiClient
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApiIfAvailable(Wearable.API)
+                .build();
 
         //Components
         ListView list = (ListView) findViewById(R.id.list);
@@ -149,8 +168,8 @@ public class Main extends AppCompatActivity {
                         } else {Log.i("INFO", "PIA 5");Toast.makeText(getApplication(), "Najpierw musisz dodać lekcje w piątek", Toast.LENGTH_LONG).show();}
                         break;
                     }
-
                 }
+                googleApiClient.connect();
                 addDialog.cancel();
             }
         });
@@ -165,6 +184,8 @@ public class Main extends AppCompatActivity {
         //Load List
         for(int i=1; i<=5; i++) {LoadList(i);}
 
+        googleApiClient.connect();
+        startService(new Intent(this, Notification_Service.class));
     }
 
     @Override
@@ -178,10 +199,12 @@ public class Main extends AppCompatActivity {
         int id = item.getItemId();
         if(id==R.id.action_settings) {
             startActivity(new Intent(this, Settings.class));
+            this.finish();
         } else if(id==R.id.action_clear) {
             for(int i=1; i<=5; i++) {sPref.edit().remove("day_"+i).commit();}
             arrayList.clear();
             adapter_list.notifyDataSetChanged();
+            googleApiClient.connect();
             Toast.makeText(getApplication(), "Poprawnie usunięto wszytskie dni", Toast.LENGTH_SHORT).show();
         }
         return true;
@@ -197,5 +220,29 @@ public class Main extends AppCompatActivity {
             arrayList.addAll(time.getLesson(sPref.getInt("day_" + day, 1)));
             adapter_list.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Log.i("INFO", "Connection succes "+bundle);
+        String[] array = new String[arrayList.size()];
+        array = arrayList.toArray(array);
+
+        PutDataMapRequest dataMap = PutDataMapRequest.create ("/dzwonek/arrayList");
+        dataMap.getDataMap().putStringArray("arrayList", array);
+        PutDataRequest request = dataMap.asPutDataRequest();
+        PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
+                .putDataItem(googleApiClient, request);
+        googleApiClient.disconnect();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.i("INFO", "Connection Suspended");
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.i("INFO", "Connection Failed");
     }
 }

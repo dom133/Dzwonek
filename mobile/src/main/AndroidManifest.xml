@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="pl.dom133.dzwonek">
 
+    <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_dzwonek"
@@ -10,6 +12,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Main"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +27,10 @@
             android:exported="false"
             android:process=":Notification_Service" />
 
-        <activity android:name=".Settings"></activity>
+        <activity
+            android:name=".Settings"
+            android:launchMode="singleTop" />
+
     </application>
 
 </manifest>

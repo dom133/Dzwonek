@@ -19,6 +19,7 @@
     </string-array>
 
     <string-array name="time_array">
+        <item>1 sec</item>
         <item>1 min</item>
         <item>5 min</item>
         <item>10 min</item>

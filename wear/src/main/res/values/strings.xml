@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Dzwonek</string>
-    <string name="hello_round">Hello Round World!</string>
-    <string name="hello_square">Hello Square World!</string>
+    <string-array name="test_array">
+        <item>Test</item>
+        <item>Test 2</item>
+    </string-array>
 </resources>
