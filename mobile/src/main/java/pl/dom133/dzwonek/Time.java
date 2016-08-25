@@ -192,7 +192,7 @@ public class Time {
         list.add(c.get(Calendar.SECOND));
         /*list.add(8);
         list.add(55);
-        list.add(0);*/
+        list.add(32);*/
         return list;
     }
 

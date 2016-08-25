@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Notification_Service extends Service {
@@ -19,9 +20,12 @@ public class Notification_Service extends Service {
     private NotificationTask nt;
     private Time time = new Time();
     private SharedPreferences sPref;
+    private ArrayList<String> arrayList = new ArrayList<>();
+    private GoogleApi googleApi;
 
 
     public Notification_Service() {
+
     }
 
     @Override
@@ -32,6 +36,7 @@ public class Notification_Service extends Service {
         nt = new NotificationTask();
         notification = new Notifications(getApplication());
         sPref = getSharedPreferences("Dzwonek", Context.MODE_PRIVATE);
+        googleApi = new GoogleApi(getApplication());
     }
 
     @Override
@@ -85,33 +90,30 @@ public class Notification_Service extends Service {
                             int hour = (time.getLessonArray(lesson, "do").get(0) - time.getTime().get(0));
                             int minuts = (time.getLessonArray(lesson, "do").get(1) - time.getTime().get(1)) + (hour * 60);
                             int sec = 60-time.getTime().get(2);
+
+                            arrayList.add(String.valueOf(minuts)); arrayList.add(String.valueOf(sec));
+
                             Log.i("INFO", "Time: " + hour + ":" + minuts + ":" + sec);
                             if (minuts > 1) {
-                                if(sec!=60 ){notification.sendNotification("Pozostało: " + minuts + "min", "Do dzwonka pozostało: " + (minuts-1) + ":" + time.getString(sec) + "min", minuts);}
-                                else {notification.sendNotification("Pozostało: " + minuts + "min", "Do dzwonka pozostało: " + (minuts-1)+"min", minuts);}
-                            } else if (minuts == 1 && sec < 60) {
-                                notification.sendNotification("Pozostało: " + time.getString(sec) + "sec", "Do dzwonka pozostało: " + time.getString(sec) + "sec", minuts);
-                            } else {
-                                notification.cancleNotification(1);
-                            }
+                                if(sec!=60 ){notification.sendNotification("Pozostało: " + minuts + "min", "Do dzwonka pozostało: " + (minuts-1) + ":" + time.getString(sec) + "min", minuts, sec); arrayList.add("Pozostało: " + minuts + "min"); arrayList.add("Do dzwonka pozostało: " + (minuts-1) + ":" + time.getString(sec) + "min");}
+                                else {notification.sendNotification("Pozostało: " + minuts + "min", "Do dzwonka pozostało: " + minuts+"min", minuts, sec); arrayList.add("Pozostało: " + minuts + "min"); arrayList.add("Do dzwonka pozostało: " + minuts+"min");}
+                            } else if (minuts == 1 && sec < 60) {notification.sendNotification("Pozostało: " + time.getString(sec) + "sec", "Do dzwonka pozostało: " + time.getString(sec) + "sec", minuts, sec); arrayList.add("Pozostało: " + time.getString(sec) + "sec"); arrayList.add("Do dzwonka pozostało: " + time.getString(sec) + "sec");
+                            } else {notification.cancleNotification(1);arrayList.add("");}
                         } else if(last_lesson != 0 && lesson==10 && last_lesson < sPref.getInt("day_" + day, 1) && time.getTime().get(1) >= time.getLessonArray(last_lesson, "do").get(1)) {
                             int minuts = (time.getLessonArray(last_lesson + 1, "od").get(1) - time.getTime().get(1));
                             int sec = 60 - time.getTime().get(2);
                             Log.i("INFO", "Time: " + minuts + ":" + sec);
                             if (minuts > 1) {
-                                if (sec != 60) {
-                                    notification.sendNotification("Pozostało: " + minuts + "min", "Do dzwonka pozostało: " + (minuts - 1) + ":" + time.getString(sec) + "min", minuts);
-                                } else {
-                                    notification.sendNotification("Pozostało: " + minuts + "min", "Do dzwonka pozostało: " + (minuts - 1) + "min", minuts);
-                                }
-                            } else if (minuts == 1 && sec < 60) {
-                                notification.sendNotification("Pozostało: " + time.getString(sec) + "sec", "Do dzwonka pozostało: " + time.getString(sec) + "sec", minuts);
-                            } else {
-                                notification.cancleNotification(1);
-                            }
-                        } else {notification.cancleNotification(1);}
-                    } else {notification.cancleNotification(1);}
+                                if (sec != 60) {notification.sendNotification("Pozostało: " + minuts + "min", "Do dzwonka pozostało: " + (minuts - 1) + ":" + time.getString(sec) + "min", minuts, sec); arrayList.add("Pozostało: " + minuts + "min"); arrayList.add("Do dzwonka pozostało: " + (minuts - 1) + ":" + time.getString(sec) + "min");}
+                                else {notification.sendNotification("Pozostało: " + minuts + "min", "Do dzwonka pozostało: " + minuts + "min", minuts, sec); arrayList.add("Pozostało: " + minuts + "min"); arrayList.add("Do dzwonka pozostało: " + minuts + "min");}
+                            } else if (minuts == 1 && sec < 60) {notification.sendNotification("Pozostało: " + time.getString(sec) + "sec", "Do dzwonka pozostało: " + time.getString(sec) + "sec", minuts, sec); arrayList.add("Pozostało: " + time.getString(sec) + "sec"); arrayList.add("Do dzwonka pozostało: " + time.getString(sec) + "sec");}
+                            else {notification.cancleNotification(1); arrayList.add("");}
+                        } else {notification.cancleNotification(1); arrayList.add("");}
+                    } else {notification.cancleNotification(1); arrayList.add("");}
+
+                    googleApi.sendData("notification", arrayList);
                     Thread.sleep(sPref.getInt("wait", 1000));
+                    arrayList.clear();
                 } catch(Exception e) {
                     Log.e("ERROR", e.getMessage());
                 }

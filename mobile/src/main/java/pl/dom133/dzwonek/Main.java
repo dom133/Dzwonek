@@ -31,15 +31,14 @@ import com.google.android.gms.wearable.Wearable;
 
 import java.util.ArrayList;
 
-public class Main extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class Main extends AppCompatActivity{
 
 
     private ArrayAdapter<String> adapter_list = null;
     private ArrayList<String> arrayList = new ArrayList<>();
     private Time time = new Time();
     private SharedPreferences sPref;
-    private GoogleApiClient googleApiClient;
-
+    private GoogleApi googleApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +46,6 @@ public class Main extends AppCompatActivity implements GoogleApiClient.Connectio
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        //GoogleApiClient
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApiIfAvailable(Wearable.API)
-                .build();
 
         //Components
         ListView list = (ListView) findViewById(R.id.list);
@@ -169,7 +161,8 @@ public class Main extends AppCompatActivity implements GoogleApiClient.Connectio
                         break;
                     }
                 }
-                googleApiClient.connect();
+                restartService();
+                googleApi.sendData("arrayList", arrayList);
                 addDialog.cancel();
             }
         });
@@ -184,8 +177,14 @@ public class Main extends AppCompatActivity implements GoogleApiClient.Connectio
         //Load List
         for(int i=1; i<=5; i++) {LoadList(i);}
 
-        googleApiClient.connect();
         startService(new Intent(this, Notification_Service.class));
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        googleApi = new GoogleApi(getApplication());
+        googleApi.sendData("arrayList", arrayList);
     }
 
     @Override
@@ -204,7 +203,8 @@ public class Main extends AppCompatActivity implements GoogleApiClient.Connectio
             for(int i=1; i<=5; i++) {sPref.edit().remove("day_"+i).commit();}
             arrayList.clear();
             adapter_list.notifyDataSetChanged();
-            googleApiClient.connect();
+            googleApi.sendData("arrayList", arrayList);
+            restartService();
             Toast.makeText(getApplication(), "Poprawnie usunięto wszytskie dni", Toast.LENGTH_SHORT).show();
         }
         return true;
@@ -222,27 +222,11 @@ public class Main extends AppCompatActivity implements GoogleApiClient.Connectio
         }
     }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        Log.i("INFO", "Connection succes "+bundle);
-        String[] array = new String[arrayList.size()];
-        array = arrayList.toArray(array);
-
-        PutDataMapRequest dataMap = PutDataMapRequest.create ("/dzwonek/arrayList");
-        dataMap.getDataMap().putStringArray("arrayList", array);
-        PutDataRequest request = dataMap.asPutDataRequest();
-        PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
-                .putDataItem(googleApiClient, request);
-        googleApiClient.disconnect();
+    public void restartService() {
+        Intent intent = new Intent(getApplication(), Notification_Service.class);
+        intent.setAction("ACTION_STOP");
+        startService(intent);
+        startService(new Intent(getApplication(), Notification_Service.class));
     }
 
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.i("INFO", "Connection Suspended");
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.i("INFO", "Connection Failed");
-    }
 }

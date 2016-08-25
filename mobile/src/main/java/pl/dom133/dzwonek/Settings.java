@@ -39,6 +39,12 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.i("INFO", "Time spinner selected: "+i);
+
+                Intent intent = new Intent(getApplication(), Notification_Service.class);
+                intent.setAction("ACTION_STOP");
+                startService(intent);
+                startService(new Intent(getApplication(), Notification_Service.class));
+
                 sPref.edit().putInt("ts_pos", i).commit();
 
                 switch (i) {
