@@ -29,17 +29,17 @@ public class Notifications {
 
         switch(minuts) {
             case 10:{
-                if(sec==60){break;}
+                if(sec!=60){break;}
                 else {notification.setVibrate(new long[]{500, 3000}); break;}
             }
 
             case 5: {
-                if(sec==60){break;}
+                if(sec!=60){break;}
                 else {notification.setVibrate(new long[]{500, 2000}); break;}
             }
 
             case 1: {
-                if(sec==60){break;}
+                if(sec!=60){break;}
                 else {notification.setVibrate(new long[]{500, 1000}); break;}
             }
         }

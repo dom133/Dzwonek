@@ -9,7 +9,7 @@ android {
     buildToolsVersion "24.0.1"
     defaultConfig {
         applicationId "pl.dom133.dzwonek"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 24
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
