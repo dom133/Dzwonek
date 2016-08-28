@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_bg"
     android:weightSum="1">
+
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:weightSum="1"
         android:background="@color/colorPrimary">
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.04">
+            android:layout_height="43dp">
 
             <TextView
                 android:text="Dzień: "
@@ -28,6 +29,7 @@
             <Spinner
                 android:layout_width="193dp"
                 android:layout_height="match_parent"
+                android:textColor="#000"
                 android:id="@+id/days_spinner" />
 
         </LinearLayout>
@@ -35,8 +37,7 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_weight="0.04"
-            android:layout_height="wrap_content">
+            android:layout_height="45dp">
 
             <TextView
                 android:text="Liczba lekcji: "
@@ -50,15 +51,25 @@
                 android:layout_width="190dp"
                 android:layout_height="match_parent"
                 android:id="@+id/lesson_spinner"
+                android:textColor="#000"
                 android:layout_weight="0.02" />
 
         </LinearLayout>
 
-        <Button
-            android:text="Dodaj"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/dialog_add_button" />
+            android:layout_height="match_parent"
+            android:layout_weight="0.08">
+
+            <Button
+                android:text="Dodaj"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/dialog_add_button"
+                android:layout_weight="1" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>

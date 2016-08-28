@@ -43,7 +43,6 @@ public class Settings extends AppCompatActivity {
                 Intent intent = new Intent(getApplication(), Notification_Service.class);
                 intent.setAction("ACTION_STOP");
                 startService(intent);
-                startService(new Intent(getApplication(), Notification_Service.class));
 
                 sPref.edit().putInt("ts_pos", i).commit();
 

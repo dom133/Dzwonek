@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -60,6 +62,7 @@ public class Main extends AppCompatActivity{
         final View addDialogView = factory.inflate(R.layout.add_dialog, null);
         final AlertDialog addDialog = new AlertDialog.Builder(this).create();
         addDialog.setView(addDialogView);
+        addDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
 
         addDialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -68,8 +71,8 @@ public class Main extends AppCompatActivity{
                 //Dialog Spinner
                 Spinner day_spinner = (Spinner) addDialogView.findViewById(R.id.days_spinner);
                 Spinner lesson_spinner = (Spinner) addDialogView.findViewById(R.id.lesson_spinner);
-                ArrayAdapter<CharSequence> day_adapter = ArrayAdapter.createFromResource(getApplication(), R.array.days_array, android.R.layout.simple_spinner_item);
-                ArrayAdapter<CharSequence> lesson_adapter = ArrayAdapter.createFromResource(getApplication(), R.array.lessons_array, android.R.layout.simple_spinner_item);
+                ArrayAdapter<CharSequence> day_adapter = ArrayAdapter.createFromResource(getBaseContext(), R.array.days_array, android.R.layout.simple_spinner_item);
+                ArrayAdapter<CharSequence> lesson_adapter = ArrayAdapter.createFromResource(getBaseContext(), R.array.lessons_array, android.R.layout.simple_spinner_item);
                 day_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 lesson_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 day_spinner.setAdapter(day_adapter);
@@ -210,6 +213,12 @@ public class Main extends AppCompatActivity{
         return true;
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(Main.this);
+    }
+
     public void LoadList(int day) {
         if(sPref.contains("day_"+day)) {
             if(day==1) {arrayList.add("Poniedziałek: ");}
@@ -226,7 +235,7 @@ public class Main extends AppCompatActivity{
         Intent intent = new Intent(getApplication(), Notification_Service.class);
         intent.setAction("ACTION_STOP");
         startService(intent);
-        startService(new Intent(getApplication(), Notification_Service.class));
+        //startService(new Intent(getApplication(), Notification_Service.class));
     }
 
 }

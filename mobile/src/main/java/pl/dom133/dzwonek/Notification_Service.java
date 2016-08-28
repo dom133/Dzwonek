@@ -42,6 +42,8 @@ public class Notification_Service extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.i("INFO", "Notification onDestroy");
+        startService(new Intent(this, Notification_Service.class));
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 
