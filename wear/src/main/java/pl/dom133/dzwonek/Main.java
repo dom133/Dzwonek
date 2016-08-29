@@ -17,6 +17,9 @@ import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Wearable;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +36,7 @@ public class Main extends Activity implements GoogleApiClient.ConnectionCallback
     private ArrayAdapter<String> arrayAdapter = null;
     private SharedPreferences sPref;
     private Notifications notifications;
+    private Gson gson = new Gson();
 
 
     @Override
@@ -58,8 +62,9 @@ public class Main extends Activity implements GoogleApiClient.ConnectionCallback
         //Load ArrayList
         if(sPref.contains("arrayList")) {
             Log.i("INFO", "Load ArrayList");
-            Set<String> set = sPref.getStringSet("arrayList", null);
-            arrayList = new ArrayList<>(set);
+            String[] text = gson.fromJson(sPref.getString("arrayList", null), String[].class);
+            List<String> list = Arrays.asList(text);
+            arrayList = new ArrayList<>(list);
             arrayAdapter.clear();
             arrayAdapter.addAll(arrayList);
             arrayAdapter.notifyDataSetChanged();
@@ -88,14 +93,12 @@ public class Main extends Activity implements GoogleApiClient.ConnectionCallback
                 String[] data = dataItem.getDataMap().getStringArray("arrayList");
                 List<String> data_list = Arrays.asList(data);
                 arrayList = new ArrayList<>(data_list);
-                Set<String> set = new HashSet<>();
-                set.addAll(arrayList);
                 sPref.edit().remove("arrayList").commit();
-                sPref.edit().putStringSet("arrayList", set).commit();
+                sPref.edit().putString("arrayList", gson.toJson(data_list)).commit();
                 arrayAdapter.clear();
                 arrayAdapter.addAll(arrayList);
                 arrayAdapter.notifyDataSetChanged();
-                Toast.makeText(getApplication(), "Dane synchronizowane", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplication(), "Dane synchronizowane", Toast.LENGTH_LONG).show();
                 Log.i("INFO","Data colected ");
             } else if(eventUri.contains ("/dzwonek/notification")) {
                 DataMapItem dataItem = DataMapItem.fromDataItem (event.getDataItem());
