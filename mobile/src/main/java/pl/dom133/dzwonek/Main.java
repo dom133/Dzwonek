@@ -38,7 +38,7 @@ public class Main extends AppCompatActivity{
 
     private ArrayAdapter<String> adapter_list = null;
     private ArrayList<String> arrayList = new ArrayList<>();
-    private Time time = new Time();
+    private Time time;
     private SharedPreferences sPref;
     private GoogleApi googleApi;
 
@@ -53,6 +53,7 @@ public class Main extends AppCompatActivity{
         ListView list = (ListView) findViewById(R.id.list);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_button);
         sPref = getSharedPreferences("Dzwonek", Context.MODE_PRIVATE);
+        time = new Time(sPref);
 
         adapter_list = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
         list.setAdapter(adapter_list);
@@ -235,7 +236,6 @@ public class Main extends AppCompatActivity{
         Intent intent = new Intent(getApplication(), Notification_Service.class);
         intent.setAction("ACTION_STOP");
         startService(intent);
-        //startService(new Intent(getApplication(), Notification_Service.class));
     }
 
 }

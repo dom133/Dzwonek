@@ -18,11 +18,10 @@ public class Notification_Service extends Service {
     private Application app;
     private Notifications notification;
     private NotificationTask nt;
-    private Time time = new Time();
+    private Time time;
     private SharedPreferences sPref;
     private ArrayList<String> arrayList = new ArrayList<>();
     private GoogleApi googleApi;
-
 
     public Notification_Service() {
 
@@ -37,6 +36,7 @@ public class Notification_Service extends Service {
         notification = new Notifications(getApplication());
         sPref = getSharedPreferences("Dzwonek", Context.MODE_PRIVATE);
         googleApi = new GoogleApi(getApplication());
+        time = new Time(sPref);
     }
 
     @Override
@@ -75,7 +75,6 @@ public class Notification_Service extends Service {
 
     class NotificationTask extends AsyncTask<String, String, String> {
         private boolean running = false;
-
 
         @Override
         protected String doInBackground(String... strings) {

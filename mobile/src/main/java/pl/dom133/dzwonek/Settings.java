@@ -6,16 +6,27 @@ import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
+
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Settings extends AppCompatActivity {
 
     private SharedPreferences sPref;
+    private List<String> t_list = new ArrayList<>();
+    private Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +36,19 @@ public class Settings extends AppCompatActivity {
         if(actionBar!=null){actionBar.setDisplayHomeAsUpEnabled(true); actionBar.setTitle("Ustawienia");}
 
         sPref = getSharedPreferences("Dzwonek", Context.MODE_PRIVATE);
+
+        //EditText
+        final EditText h_text = (EditText) findViewById(R.id.h_text);
+        final EditText m_text = (EditText) findViewById(R.id.m_text);
+        final EditText s_text = (EditText) findViewById(R.id.s_text);
+
+        //Load Settings
+        if(sPref.contains("time")) {
+            Log.i("INFO", "Load Settings");
+            List<String> list = Arrays.asList(gson.fromJson(sPref.getString("time", null), String[].class));
+            h_text.setText(list.get(0)); m_text.setText(list.get(1)); s_text.setText(list.get(2));
+            t_list.clear();t_list.addAll(list);
+        } else {t_list.add("");t_list.add("");t_list.add("");}
 
         //Spinners
         Spinner time_spinner = (Spinner) findViewById(R.id.time_spinner);
@@ -100,10 +124,76 @@ public class Settings extends AppCompatActivity {
             }
         });
 
+        //Save editext
+        h_text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                try {checkText(h_text, 24, 0);}
+                catch(Exception e) {Log.e("ERROR", e.getMessage()); t_list.add(0, "+0");}
+            }
+        });
+
+        m_text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                try {checkText(m_text, 60, 1);}
+                catch(Exception e) {Log.e("ERROR", e.getMessage()); t_list.add(1, "+0");}
+            }
+        });
+
+        s_text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                try {checkText(s_text, 60, 2);}
+                catch(Exception e) {Log.e("ERROR", e.getMessage()); t_list.add(2, "+0");}
+            }
+        });
+
+    }
+
+    public void checkText(EditText text, int maxValue, int index) {
+        StringBuilder stext = new StringBuilder(text.getText().toString());
+        stext.deleteCharAt(0);
+        if (Integer.valueOf(stext.toString()) > maxValue) {
+            text.setError("Ta wartość nie może być większa niż "+maxValue); t_list.add(index, "+0");
+        } else {
+            t_list.add(index, text.getText().toString());
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.i("INFO", "Save Settings"); sPref.edit().putString("time", gson.toJson(t_list)).commit(); t_list.clear();
         startActivity(new Intent(this, Main.class));
         this.finish();
         return true;

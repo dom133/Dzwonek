@@ -1,11 +1,25 @@
 package pl.dom133.dzwonek;
 
 
+import android.content.SharedPreferences;
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.udojava.evalex.Expression;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 
 public class Time {
+
+    private SharedPreferences sPref;
+    private Gson gson  = new Gson();
+
+    public Time(SharedPreferences sPref) {this.sPref = sPref;}
 
     public ArrayList<String> getLesson(int lesson) {
         ArrayList<String> list = new ArrayList<>();
@@ -187,12 +201,22 @@ public class Time {
     public ArrayList<Integer> getTime() {
         ArrayList<Integer> list = new ArrayList<>();
         Calendar c = Calendar.getInstance();
-        list.add(c.get(Calendar.HOUR_OF_DAY));
-        list.add(c.get(Calendar.MINUTE));
-        list.add(c.get(Calendar.SECOND));
-        /*list.add(8);
-        list.add(55);
-        list.add(32);*/
+        if(sPref.getString("time", null)!=null) {
+            List<String> text = Arrays.asList(gson.fromJson(sPref.getString("time", null), String[].class));
+            StringBuilder h_txt = new StringBuilder(text.get(0));StringBuilder m_txt = new StringBuilder(text.get(1));StringBuilder s_txt = new StringBuilder(text.get(2));
+            Character h_opr = h_txt.charAt(0); Character m_opr = m_txt.charAt(0); Character s_opr = s_txt.charAt(0);
+            h_txt.deleteCharAt(0); m_txt.deleteCharAt(0); s_txt.deleteCharAt(0);
+            Expression h_math = new Expression(h_txt.toString()+h_opr+c.get(Calendar.HOUR_OF_DAY));Expression m_math = new Expression(m_txt.toString()+m_opr+c.get(Calendar.MINUTE));Expression s_math = new Expression(s_txt.toString()+s_opr+c.get(Calendar.SECOND));
+            BigDecimal h_result = h_math.eval();BigDecimal m_result = m_math.eval();BigDecimal s_result = s_math.eval();
+            Log.i("TIME", String.valueOf(h_result));
+            list.add(c.get(Calendar.HOUR_OF_DAY));
+            list.add(c.get(Calendar.MINUTE));
+            list.add(c.get(Calendar.SECOND));
+        } else {
+            list.add(c.get(Calendar.HOUR_OF_DAY));
+            list.add(c.get(Calendar.MINUTE));
+            list.add(c.get(Calendar.SECOND));
+        }
         return list;
     }
 
