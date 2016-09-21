@@ -105,8 +105,9 @@ public class Main extends Activity implements GoogleApiClient.ConnectionCallback
                 String[] data = dataItem.getDataMap().getStringArray("notification");
                 List<String> data_list = Arrays.asList(data);
                 ArrayList<String> arrayList = new ArrayList<>(data_list);
-                if(arrayList.size()<=1) {notifications.cancleNotification(1);}
-                else if(Objects.equals(arrayList.get(2), "")) {notifications.cancleNotification(1);}
+                Log.i("INFO", "0: "+arrayList.get(0)+" 1:"+arrayList.get(1));
+                if(arrayList.size()<=2) {notifications.cancleNotification(1);}
+                else if(Objects.equals(arrayList.get(1), "")) {notifications.cancleNotification(1);}
                 else {notifications.sendNotification(arrayList.get(2), arrayList.get(3), Integer.valueOf(arrayList.get(0)), Integer.valueOf(arrayList.get(1)));}
             }
         }

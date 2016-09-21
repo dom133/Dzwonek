@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -64,20 +65,46 @@ public class Main extends AppCompatActivity{
         final AlertDialog addDialog = new AlertDialog.Builder(this).create();
         addDialog.setView(addDialogView);
         addDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
+        final Spinner lesson_spinner = (Spinner) addDialogView.findViewById(R.id.lesson_spinner);
+        final Spinner type_spinner = (Spinner) addDialogView.findViewById(R.id.type_spinner);
 
         addDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
                 //Dialog Spinner
                 Spinner day_spinner = (Spinner) addDialogView.findViewById(R.id.days_spinner);
-                Spinner lesson_spinner = (Spinner) addDialogView.findViewById(R.id.lesson_spinner);
                 ArrayAdapter<CharSequence> day_adapter = ArrayAdapter.createFromResource(getBaseContext(), R.array.days_array, android.R.layout.simple_spinner_item);
-                ArrayAdapter<CharSequence> lesson_adapter = ArrayAdapter.createFromResource(getBaseContext(), R.array.lessons_array, android.R.layout.simple_spinner_item);
+                ArrayAdapter<CharSequence> lesson_adapter = ArrayAdapter.createFromResource(getBaseContext(), R.array.lessons_array_0, android.R.layout.simple_spinner_item);
+                ArrayAdapter<CharSequence> type_adapter = ArrayAdapter.createFromResource(getBaseContext(), R.array.type_array, android.R.layout.simple_spinner_item);
+
                 day_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 lesson_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                type_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                type_spinner.setAdapter(type_adapter);
                 day_spinner.setAdapter(day_adapter);
                 lesson_spinner.setAdapter(lesson_adapter);
+                type_spinner.setSelection(sPref.getInt("les_type", 0));
+            }
+        });
+
+        type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                sPref.edit().putInt("les_type", i).commit();
+                if(i==0) {
+                    ArrayAdapter<CharSequence> lesson_adapter = ArrayAdapter.createFromResource(getBaseContext(), R.array.lessons_array_0, android.R.layout.simple_spinner_item);
+                    lesson_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    lesson_spinner.setAdapter(lesson_adapter); lesson_adapter.notifyDataSetChanged();
+                } else {
+                    ArrayAdapter<CharSequence> lesson_adapter = ArrayAdapter.createFromResource(getBaseContext(), R.array.lessons_array_1, android.R.layout.simple_spinner_item);
+                    lesson_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    lesson_spinner.setAdapter(lesson_adapter); lesson_adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
 
@@ -93,7 +120,7 @@ public class Main extends AppCompatActivity{
                         if(!sPref.contains("day_1")) {
                             Log.i("INFO", "PON 2");
                             arrayList.add("Poniedziałek: ");
-                            arrayList.addAll(time.getLesson(Integer.parseInt(lesson_spinner.getSelectedItem().toString())));
+                            arrayList.addAll(time.getLesson(Integer.parseInt(lesson_spinner.getSelectedItem().toString()), sPref.getInt("les_type", 0)));
                             adapter_list.notifyDataSetChanged();
                             sPref.edit().putInt("day_1", Integer.parseInt(lesson_spinner.getSelectedItem().toString())).commit();
                             Toast.makeText(getApplication(), "Poprawnie dodano lekcje", Toast.LENGTH_SHORT).show();
@@ -108,7 +135,7 @@ public class Main extends AppCompatActivity{
                             if(!sPref.contains("day_2")) {
                                 Log.i("INFO", "WTO 3");
                                 arrayList.add("Wtorek: ");
-                                arrayList.addAll(time.getLesson(Integer.parseInt(lesson_spinner.getSelectedItem().toString())));
+                                arrayList.addAll(time.getLesson(Integer.parseInt(lesson_spinner.getSelectedItem().toString()), sPref.getInt("les_type", 0)));
                                 adapter_list.notifyDataSetChanged();
                                 sPref.edit().putInt("day_2", Integer.parseInt(lesson_spinner.getSelectedItem().toString())).commit();
                                 Toast.makeText(getApplication(), "Poprawnie dodano lekcje", Toast.LENGTH_SHORT).show();
@@ -124,7 +151,7 @@ public class Main extends AppCompatActivity{
                             if(!sPref.contains("day_3")) {
                                 Log.i("INFO", "SRO 3");
                                 arrayList.add("Środa: ");
-                                arrayList.addAll(time.getLesson(Integer.parseInt(lesson_spinner.getSelectedItem().toString())));
+                                arrayList.addAll(time.getLesson(Integer.parseInt(lesson_spinner.getSelectedItem().toString()), sPref.getInt("les_type", 0)));
                                 adapter_list.notifyDataSetChanged();
                                 sPref.edit().putInt("day_3", Integer.parseInt(lesson_spinner.getSelectedItem().toString())).commit();
                                 Toast.makeText(getApplication(), "Poprawnie dodano lekcje", Toast.LENGTH_SHORT).show();
@@ -140,7 +167,7 @@ public class Main extends AppCompatActivity{
                             if(!sPref.contains("day_4")) {
                                 Log.i("INFO", "CZW 3");
                                 arrayList.add("Czwartek: ");
-                                arrayList.addAll(time.getLesson(Integer.parseInt(lesson_spinner.getSelectedItem().toString())));
+                                arrayList.addAll(time.getLesson(Integer.parseInt(lesson_spinner.getSelectedItem().toString()), sPref.getInt("les_type", 0)));
                                 adapter_list.notifyDataSetChanged();
                                 sPref.edit().putInt("day_4", Integer.parseInt(lesson_spinner.getSelectedItem().toString())).commit();
                                 Toast.makeText(getApplication(), "Poprawnie dodano lekcje", Toast.LENGTH_SHORT).show();
@@ -156,7 +183,7 @@ public class Main extends AppCompatActivity{
                             if(!sPref.contains("day_5")) {
                                 Log.i("INFO", "PIA 3");
                                 arrayList.add("Piątek: ");
-                                arrayList.addAll(time.getLesson(Integer.parseInt(lesson_spinner.getSelectedItem().toString())));
+                                arrayList.addAll(time.getLesson(Integer.parseInt(lesson_spinner.getSelectedItem().toString()), sPref.getInt("les_type", 0)));
                                 adapter_list.notifyDataSetChanged();
                                 sPref.edit().putInt("day_5", Integer.parseInt(lesson_spinner.getSelectedItem().toString())).commit();
                                 Toast.makeText(getApplication(), "Poprawnie dodano lekcje", Toast.LENGTH_SHORT).show();
@@ -214,11 +241,11 @@ public class Main extends AppCompatActivity{
         return true;
     }
 
-    @Override
+    /*@Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(Main.this);
-    }
+    }*/
 
     public void LoadList(int day) {
         if(sPref.contains("day_"+day)) {
@@ -227,7 +254,7 @@ public class Main extends AppCompatActivity{
             else if(day==3) {arrayList.add("Środa: ");}
             else if(day==4) {arrayList.add("Czwartek: ");}
             else if(day==5) {arrayList.add("Piątek: ");}
-            arrayList.addAll(time.getLesson(sPref.getInt("day_" + day, 1)));
+            arrayList.addAll(time.getLesson(sPref.getInt("day_" + day, 1), sPref.getInt("les_type", 0)));
             adapter_list.notifyDataSetChanged();
         }
     }

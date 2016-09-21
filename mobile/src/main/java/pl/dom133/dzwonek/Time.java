@@ -21,177 +21,370 @@ public class Time {
 
     public Time(SharedPreferences sPref) {this.sPref = sPref;}
 
-    public ArrayList<String> getLesson(int lesson) {
+    public ArrayList<String> getLesson(int lesson, int type) {
         ArrayList<String> list = new ArrayList<>();
-        switch(lesson) {
-            case 1: {
-                list.add("  1. 08:00 --> 08:45");
-                break;
-            }
-
-            case 2: {
-                list.add("  1. 08:00 --> 08:45");
-                list.add("  2. 08:55 --> 09:40");
-                break;
-            }
-
-            case 3: {
-                list.add("  1. 08:00 --> 08:45");
-                list.add("  2. 08:55 --> 09:40");
-                list.add("  3. 09:50 --> 10:35");
-                break;
-            }
-
-            case 4: {
-                list.add("  1. 08:00 --> 08:45");
-                list.add("  2. 08:55 --> 09:40");
-                list.add("  3. 09:50 --> 10:35");
-                list.add("  4. 10:50 --> 11:35");
-                break;
-            }
-
-            case 5: {
-                list.add("  1. 08:00 --> 08:45");
-                list.add("  2. 08:55 --> 09:40");
-                list.add("  3. 09:50 --> 10:35");
-                list.add("  4. 10:50 --> 11:35");
-                list.add("  5. 11:55 --> 12:40");
-                break;
-            }
-
-            case 6: {
-                list.add("  1. 08:00 --> 08:45");
-                list.add("  2. 08:55 --> 09:40");
-                list.add("  3. 09:50 --> 10:35");
-                list.add("  4. 10:50 --> 11:35");
-                list.add("  5. 11:55 --> 12:40");
-                list.add("  6. 12:50 --> 13:35");
-                break;
-            }
-
-            case 7: {
-                list.add("  1. 08:00 --> 08:45");
-                list.add("  2. 08:55 --> 09:40");
-                list.add("  3. 09:50 --> 10:35");
-                list.add("  4. 10:50 --> 11:35");
-                list.add("  5. 11:55 --> 12:40");
-                list.add("  6. 12:50 --> 13:35");
-                list.add("  7. 13:40 --> 14:25");
-                break;
-            }
-        }
-        return list;
-    }
-
-    public ArrayList<Integer> getLessonArray(int lesson, String type) {
-        ArrayList<Integer> list = new ArrayList<>();
-        switch(lesson) {
-            case 1: {
-                if(Objects.equals(type, "od")) {
-                    list.add(8);
-                    list.add(0);
-                } else {
-                    list.add(8);
-                    list.add(45);
+        if(type==0) {
+            switch (lesson) {
+                case 1: {
+                    list.add("  1. 08:00 --> 08:45");
+                    break;
                 }
-                break;
-            }
 
-            case 2: {
-                if(Objects.equals(type, "od")) {
-                    list.add(8);
-                    list.add(55);
-                } else {
-                    list.add(9);
-                    list.add(40);
+                case 2: {
+                    list.add("  1. 08:00 --> 08:45");
+                    list.add("  2. 08:55 --> 09:40");
+                    break;
                 }
-                break;
-            }
 
-            case 3: {
-                if(Objects.equals(type, "od")) {
-                    list.add(9);
-                    list.add(50);
-                } else {
-                    list.add(10);
-                    list.add(35);
+                case 3: {
+                    list.add("  1. 08:00 --> 08:45");
+                    list.add("  2. 08:55 --> 09:40");
+                    list.add("  3. 09:50 --> 10:35");
+                    break;
                 }
-                break;
-            }
 
-            case 4: {
-                if(Objects.equals(type, "od")) {
-                    list.add(10);
-                    list.add(50);
-                } else {
-                    list.add(11);
-                    list.add(35);
+                case 4: {
+                    list.add("  1. 08:00 --> 08:45");
+                    list.add("  2. 08:55 --> 09:40");
+                    list.add("  3. 09:50 --> 10:35");
+                    list.add("  4. 10:50 --> 11:35");
+                    break;
                 }
-                break;
-            }
 
-            case 5: {
-                if(Objects.equals(type, "od")) {
-                    list.add(11);
-                    list.add(55);
-                } else {
-                    list.add(12);
-                    list.add(40);
+                case 5: {
+                    list.add("  1. 08:00 --> 08:45");
+                    list.add("  2. 08:55 --> 09:40");
+                    list.add("  3. 09:50 --> 10:35");
+                    list.add("  4. 10:50 --> 11:35");
+                    list.add("  5. 11:55 --> 12:40");
+                    break;
                 }
-                break;
-            }
 
-            case 6: {
-                if(Objects.equals(type, "od")) {
-                    list.add(12);
-                    list.add(50);
-                } else {
-                    list.add(13);
-                    list.add(35);
+                case 6: {
+                    list.add("  1. 08:00 --> 08:45");
+                    list.add("  2. 08:55 --> 09:40");
+                    list.add("  3. 09:50 --> 10:35");
+                    list.add("  4. 10:50 --> 11:35");
+                    list.add("  5. 11:55 --> 12:40");
+                    list.add("  6. 12:50 --> 13:35");
+                    break;
                 }
-                break;
-            }
 
-            case 7: {
-                if(Objects.equals(type, "od")) {
-                    list.add(13);
-                    list.add(40);
-                } else {
-                    list.add(14);
-                    list.add(25);
+                case 7: {
+                    list.add("  1. 08:00 --> 08:45");
+                    list.add("  2. 08:55 --> 09:40");
+                    list.add("  3. 09:50 --> 10:35");
+                    list.add("  4. 10:50 --> 11:35");
+                    list.add("  5. 11:55 --> 12:40");
+                    list.add("  6. 12:50 --> 13:35");
+                    list.add("  7. 13:40 --> 14:25");
+                    break;
                 }
-                break;
+            }
+        } else {
+            switch (lesson) {
+                case 1: {
+                    list.add("  1. 08:00 --> 08:45");
+                    break;
+                }
+
+                case 2: {
+                    list.add("  1. 08:00 --> 08:45");
+                    list.add("  2. 08:50 --> 09:35");
+                    break;
+                }
+
+                case 3: {
+                    list.add("  1. 08:00 --> 08:45");
+                    list.add("  2. 08:50 --> 09:35");
+                    list.add("  3. 09:45 --> 10:30");
+                    break;
+                }
+
+                case 4: {
+                    list.add("  1. 08:00 --> 08:45");
+                    list.add("  2. 08:50 --> 09:35");
+                    list.add("  3. 09:45 --> 10:30");
+                    list.add("  4. 10:45 --> 11:30");
+                    break;
+                }
+
+                case 5: {
+                    list.add("  1. 08:00 --> 08:45");
+                    list.add("  2. 08:50 --> 09:35");
+                    list.add("  3. 09:45 --> 10:30");
+                    list.add("  4. 10:45 --> 11:30");
+                    list.add("  5. 11:40 --> 12:25");
+                    break;
+                }
+
+                case 6: {
+                    list.add("  1. 08:00 --> 08:45");
+                    list.add("  2. 08:50 --> 09:35");
+                    list.add("  3. 09:45 --> 10:30");
+                    list.add("  4. 10:45 --> 11:30");
+                    list.add("  5. 11:40 --> 12:25");
+                    list.add("  6. 12:35 --> 13:20");
+                    break;
+                }
+
+                case 7: {
+                    list.add("  1. 08:00 --> 08:45");
+                    list.add("  2. 08:50 --> 09:35");
+                    list.add("  3. 09:45 --> 10:30");
+                    list.add("  4. 10:45 --> 11:30");
+                    list.add("  5. 11:40 --> 12:25");
+                    list.add("  6. 12:35 --> 13:20");
+                    list.add("  7. 13:25 --> 14:10");
+                    break;
+                }
+
+                case 8: {
+                    list.add("  1. 08:00 --> 08:45");
+                    list.add("  2. 08:50 --> 09:35");
+                    list.add("  3. 09:45 --> 10:30");
+                    list.add("  4. 10:45 --> 11:30");
+                    list.add("  5. 11:40 --> 12:25");
+                    list.add("  6. 12:35 --> 13:20");
+                    list.add("  7. 13:25 --> 14:10");
+                    list.add("  8. 14:15 --> 15:00");
+                    break;
+                }
             }
         }
 
         return list;
     }
 
-    public ArrayList<Integer> getLessonByTime(int hour, int minut) {
+    public ArrayList<Integer> getLessonArray(int lesson, String type, int les_type) {
+        ArrayList<Integer> list = new ArrayList<>();
+        if(les_type==0) {
+            switch (lesson) {
+                case 1: {
+                    if (Objects.equals(type, "od")) {
+                        list.add(8);
+                        list.add(0);
+                    } else {
+                        list.add(8);
+                        list.add(45);
+                    }
+                    break;
+                }
+
+                case 2: {
+                    if (Objects.equals(type, "od")) {
+                        list.add(8);
+                        list.add(55);
+                    } else {
+                        list.add(9);
+                        list.add(40);
+                    }
+                    break;
+                }
+
+                case 3: {
+                    if (Objects.equals(type, "od")) {
+                        list.add(9);
+                        list.add(50);
+                    } else {
+                        list.add(10);
+                        list.add(35);
+                    }
+                    break;
+                }
+
+                case 4: {
+                    if (Objects.equals(type, "od")) {
+                        list.add(10);
+                        list.add(50);
+                    } else {
+                        list.add(11);
+                        list.add(35);
+                    }
+                    break;
+                }
+
+                case 5: {
+                    if (Objects.equals(type, "od")) {
+                        list.add(11);
+                        list.add(55);
+                    } else {
+                        list.add(12);
+                        list.add(40);
+                    }
+                    break;
+                }
+
+                case 6: {
+                    if (Objects.equals(type, "od")) {
+                        list.add(12);
+                        list.add(50);
+                    } else {
+                        list.add(13);
+                        list.add(35);
+                    }
+                    break;
+                }
+
+                case 7: {
+                    if (Objects.equals(type, "od")) {
+                        list.add(13);
+                        list.add(40);
+                    } else {
+                        list.add(14);
+                        list.add(25);
+                    }
+                    break;
+                }
+            }
+        } else {
+            switch (lesson) {
+                case 1: {
+                    if (Objects.equals(type, "od")) {
+                        list.add(8);
+                        list.add(0);
+                    } else {
+                        list.add(8);
+                        list.add(45);
+                    }
+                    break;
+                }
+
+                case 2: {
+                    if (Objects.equals(type, "od")) {
+                        list.add(8);
+                        list.add(50);
+                    } else {
+                        list.add(9);
+                        list.add(35);
+                    }
+                    break;
+                }
+
+                case 3: {
+                    if (Objects.equals(type, "od")) {
+                        list.add(9);
+                        list.add(45);
+                    } else {
+                        list.add(10);
+                        list.add(30);
+                    }
+                    break;
+                }
+
+                case 4: {
+                    if (Objects.equals(type, "od")) {
+                        list.add(10);
+                        list.add(45);
+                    } else {
+                        list.add(11);
+                        list.add(30);
+                    }
+                    break;
+                }
+
+                case 5: {
+                    if (Objects.equals(type, "od")) {
+                        list.add(11);
+                        list.add(40);
+                    } else {
+                        list.add(12);
+                        list.add(25);
+                    }
+                    break;
+                }
+
+                case 6: {
+                    if (Objects.equals(type, "od")) {
+                        list.add(12);
+                        list.add(35);
+                    } else {
+                        list.add(13);
+                        list.add(20);
+                    }
+                    break;
+                }
+
+                case 7: {
+                    if (Objects.equals(type, "od")) {
+                        list.add(13);
+                        list.add(25);
+                    } else {
+                        list.add(14);
+                        list.add(10);
+                    }
+                    break;
+                }
+
+                case 8: {
+                    if (Objects.equals(type, "od")) {
+                        list.add(14);
+                        list.add(15);
+                    } else {
+                        list.add(15);
+                        list.add(0);
+                    }
+                    break;
+                }
+            }
+        }
+
+        return list;
+    }
+
+    public ArrayList<Integer> getLessonByTime(int hour, int minut, int type) {
 
         ArrayList<Integer> list = new ArrayList<>();
-        //Lekcje
-        if(hour==8 && minut < 45) {list.add(1); list.add(0);}
-        else if(hour==8 && minut >= 55) {list.add(2); list.add(0);}
-        else if(hour==9 && minut < 40) {list.add(2); list.add(0);}
-        else if(hour==9 && minut >= 50) {list.add(3); list.add(0);}
-        else if(hour==10 && minut < 35) {list.add(3); list.add(0);}
-        else if(hour==10 && minut >= 50) {list.add(4); list.add(0);}
-        else if(hour==11 && minut < 35) {list.add(4); list.add(0);}
-        else if(hour==11 && minut >= 55) {list.add(5); list.add(0);}
-        else if(hour==12 && minut < 40) {list.add(5); list.add(0);}
-        else if(hour==12 && minut >= 50) {list.add(6); list.add(0);}
-        else if(hour==13 && minut < 35) {list.add(6); list.add(0);}
-        else if(hour==13 && minut >= 40) {list.add(7); list.add(0);}
-        else if(hour==14 && minut < 25) {list.add(7); list.add(0);}
-        //Przerwy
-        else if(hour==8 && minut >= 45) {list.add(10); list.add(1);}
-        else if(hour==9 && minut >= 40) {list.add(10); list.add(2);}
-        else if(hour==10 && minut >= 35) {list.add(10); list.add(3);}
-        else if(hour==11 && minut >= 35) {list.add(10); list.add(4);}
-        else if(hour==12 && minut >= 40) {list.add(10); list.add(5);}
-        else if(hour==13 && minut >= 35) {list.add(10); list.add(6);}
-        else { list.add(0); list.add(0);}
+        if(type==0) {
+            //Lekcje
+            if (hour == 8 && minut < 45) {list.add(1);list.add(0);
+            } else if (hour == 8 && minut >= 55) {list.add(2);list.add(0);
+            } else if (hour == 9 && minut < 40) {list.add(2);list.add(0);
+            } else if (hour == 9 && minut >= 50) {list.add(3);list.add(0);
+            } else if (hour == 10 && minut < 35) {list.add(3);list.add(0);
+            } else if (hour == 10 && minut >= 50) {list.add(4);list.add(0);
+            } else if (hour == 11 && minut < 35) {list.add(4);list.add(0);
+            } else if (hour == 11 && minut >= 55) {list.add(5);list.add(0);
+            } else if (hour == 12 && minut < 40) {list.add(5);list.add(0);
+            } else if (hour == 12 && minut >= 50) {list.add(6);list.add(0);
+            } else if (hour == 13 && minut < 35) {list.add(6);list.add(0);
+            } else if (hour == 13 && minut >= 40) {list.add(7);list.add(0);
+            } else if (hour == 14 && minut < 25) {list.add(7);list.add(0);}
+            //Przerwy
+            else if (hour == 8 && minut >= 45) {list.add(10);list.add(1);
+            } else if (hour == 9 && minut >= 40) {list.add(10);list.add(2);
+            } else if (hour == 10 && minut >= 35) {list.add(10);list.add(3);
+            } else if (hour == 11 && minut >= 35) {list.add(10);list.add(4);
+            } else if (hour == 12 && minut >= 40) {list.add(10);list.add(5);
+            } else if (hour == 13 && minut >= 35) {list.add(10);list.add(6);
+            } else {list.add(0);list.add(0);}
+        } else {
+            //Lekcje
+            if (hour == 8 && minut < 45) {list.add(1);list.add(0);
+            } else if (hour == 8 && minut >= 50) {list.add(2);list.add(0);
+            } else if (hour == 9 && minut < 35) {list.add(2);list.add(0);
+            } else if (hour == 9 && minut >= 45) {list.add(3);list.add(0);
+            } else if (hour == 10 && minut < 30) {list.add(3);list.add(0);
+            } else if (hour == 10 && minut >= 45) {list.add(4);list.add(0);
+            } else if (hour == 11 && minut < 30) {list.add(4);list.add(0);
+            } else if (hour == 11 && minut >= 40) {list.add(5);list.add(0);
+            } else if (hour == 12 && minut < 25) {list.add(5);list.add(0);
+            } else if (hour == 12 && minut >= 35) {list.add(6);list.add(0);
+            } else if (hour == 13 && minut < 20) {list.add(6);list.add(0);
+            } else if (hour == 13 && minut >= 25) {list.add(7);list.add(0);
+            } else if (hour == 14 && minut < 10) {list.add(7);list.add(0);
+            } else if (hour == 14 && minut >= 15) {list.add(8);list.add(0);
+            } else if (hour == 15 && minut < 0) {list.add(8);list.add(0);}
+            //Przerwy
+            else if (hour == 8 && minut >= 45) {list.add(10);list.add(1);
+            } else if (hour == 9 && minut >= 35) {list.add(10);list.add(2);
+            } else if (hour == 10 && minut >= 30) {list.add(10);list.add(3);
+            } else if (hour == 11 && minut >= 30) {list.add(10);list.add(4);
+            } else if (hour == 12 && minut >= 25) {list.add(10);list.add(5);
+            } else if (hour == 13 && minut >= 20) {list.add(10);list.add(6);
+            } else if (hour == 14 && minut >= 10) {list.add(10);list.add(7);
+            } else {list.add(0);list.add(0);}
+        }
 
         return list;
     }
@@ -224,5 +417,4 @@ public class Time {
         if(time<=9) {return "0"+time;}
         else {return String.valueOf(time);}
     }
-
 }
