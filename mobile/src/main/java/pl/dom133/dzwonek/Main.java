@@ -77,6 +77,9 @@ public class Main extends AppCompatActivity{
                 ArrayAdapter<CharSequence> lesson_adapter = ArrayAdapter.createFromResource(getBaseContext(), R.array.lessons_array_0, android.R.layout.simple_spinner_item);
                 ArrayAdapter<CharSequence> type_adapter = ArrayAdapter.createFromResource(getBaseContext(), R.array.type_array, android.R.layout.simple_spinner_item);
 
+                if(arrayList.size()>1) {type_spinner.setEnabled(false);}
+                else {type_spinner.setEnabled(true);}
+
                 day_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 lesson_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 type_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
