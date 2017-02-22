@@ -82,35 +82,41 @@ public class Main extends Activity implements GoogleApiClient.ConnectionCallback
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
 
-        for (DataEvent event: dataEvents) {
+        try {
+            for (DataEvent event : dataEvents) {
 
-            Log.i("INFO", "Event received: " + event.getDataItem().getUri());
+                Log.i("INFO", "Event received: " + event.getDataItem().getUri());
 
-            String eventUri = event.getDataItem().getUri().toString();
+                String eventUri = event.getDataItem().getUri().toString();
 
-            if (eventUri.contains ("/dzwonek/arrayList")) {
-                DataMapItem dataItem = DataMapItem.fromDataItem (event.getDataItem());
-                String[] data = dataItem.getDataMap().getStringArray("arrayList");
-                List<String> data_list = Arrays.asList(data);
-                arrayList = new ArrayList<>(data_list);
-                sPref.edit().remove("arrayList").commit();
-                sPref.edit().putString("arrayList", gson.toJson(data_list)).commit();
-                arrayAdapter.clear();
-                arrayAdapter.addAll(arrayList);
-                arrayAdapter.notifyDataSetChanged();
-                Toast.makeText(getApplication(), "Dane synchronizowane", Toast.LENGTH_LONG).show();
-                Log.i("INFO","Data colected ");
-            } else if(eventUri.contains ("/dzwonek/notification")) {
-                DataMapItem dataItem = DataMapItem.fromDataItem (event.getDataItem());
-                String[] data = dataItem.getDataMap().getStringArray("notification");
-                List<String> data_list = Arrays.asList(data);
-                ArrayList<String> arrayList = new ArrayList<>(data_list);
-                Log.i("INFO", "0: "+arrayList.get(0)+" 1:"+arrayList.get(1));
-                if(arrayList.size()<=2) {notifications.cancleNotification(1);}
-                else if(Objects.equals(arrayList.get(1), "")) {notifications.cancleNotification(1);}
-                else {notifications.sendNotification(arrayList.get(2), arrayList.get(3), Integer.valueOf(arrayList.get(0)), Integer.valueOf(arrayList.get(1)));}
+                if (eventUri.contains("/dzwonek/arrayList")) {
+                    DataMapItem dataItem = DataMapItem.fromDataItem(event.getDataItem());
+                    String[] data = dataItem.getDataMap().getStringArray("arrayList");
+                    List<String> data_list = Arrays.asList(data);
+                    arrayList = new ArrayList<>(data_list);
+                    sPref.edit().remove("arrayList").commit();
+                    sPref.edit().putString("arrayList", gson.toJson(data_list)).commit();
+                    arrayAdapter.clear();
+                    arrayAdapter.addAll(arrayList);
+                    arrayAdapter.notifyDataSetChanged();
+                    Toast.makeText(getApplication(), "Dane synchronizowane", Toast.LENGTH_LONG).show();
+                    Log.i("INFO", "Data colected ");
+                } else if (eventUri.contains("/dzwonek/notification")) {
+                    DataMapItem dataItem = DataMapItem.fromDataItem(event.getDataItem());
+                    String[] data = dataItem.getDataMap().getStringArray("notification");
+                    List<String> data_list = Arrays.asList(data);
+                    ArrayList<String> arrayList = new ArrayList<>(data_list);
+                    Log.i("INFO", "0: " + arrayList.get(0) + " 1:" + arrayList.get(1));
+                    if (arrayList.size() <= 2) {
+                        notifications.cancleNotification(1);
+                    } else if (Objects.equals(arrayList.get(1), "")) {
+                        notifications.cancleNotification(1);
+                    } else {
+                        notifications.sendNotification(arrayList.get(2), arrayList.get(3), Integer.valueOf(arrayList.get(0)), Integer.valueOf(arrayList.get(1)));
+                    }
+                }
             }
-        }
+        } catch(Exception e) {Log.e("ERROR", e.getMessage());}
     }
 
     @Override

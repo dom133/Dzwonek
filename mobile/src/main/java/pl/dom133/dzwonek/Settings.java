@@ -42,7 +42,14 @@ public class Settings extends AppCompatActivity {
         final EditText m_text = (EditText) findViewById(R.id.m_text);
         final EditText s_text = (EditText) findViewById(R.id.s_text);
 
+        //Spinners
+        Spinner time_spinner = (Spinner) findViewById(R.id.time_spinner);
+        ArrayAdapter<CharSequence> time_adapter = ArrayAdapter.createFromResource(this, R.array.time_array, android.R.layout.simple_spinner_item);
+        time_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        time_spinner.setAdapter(time_adapter);
+
         //Load Settings
+        time_spinner.setSelection(sPref.getInt("ts_pos", 0));
         if(sPref.contains("time")) {
             Log.i("INFO", "Load Settings");
             List<String> list = Arrays.asList(gson.fromJson(sPref.getString("time", null), String[].class));
@@ -50,23 +57,10 @@ public class Settings extends AppCompatActivity {
             t_list.clear();t_list.addAll(list);
         } else {t_list.add("");t_list.add("");t_list.add("");}
 
-        //Spinners
-        Spinner time_spinner = (Spinner) findViewById(R.id.time_spinner);
-        ArrayAdapter<CharSequence> time_adapter = ArrayAdapter.createFromResource(this, R.array.time_array, android.R.layout.simple_spinner_item);
-        time_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        time_spinner.setAdapter(time_adapter);
-
-        //Load position spinner
-        time_spinner.setSelection(sPref.getInt("ts_pos", 0));
-
         time_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.i("INFO", "Time spinner selected: "+i);
-
-                Intent intent = new Intent(getApplication(), Notification_Service.class);
-                intent.setAction("ACTION_STOP");
-                startService(intent);
 
                 sPref.edit().putInt("ts_pos", i).commit();
 
@@ -138,8 +132,8 @@ public class Settings extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                try {checkText(h_text, 24, 0);}
-                catch(Exception e) {Log.e("ERROR", e.getMessage()); t_list.add(0, "+0");}
+                try {checkText(h_text, 23, 0);}
+                catch(Exception e) {Log.e("ERROR", e.getMessage()); t_list.add(0, "0");}
             }
         });
 
@@ -156,8 +150,8 @@ public class Settings extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                try {checkText(m_text, 60, 1);}
-                catch(Exception e) {Log.e("ERROR", e.getMessage()); t_list.add(1, "+0");}
+                try {checkText(m_text, 59, 1);}
+                catch(Exception e) {Log.e("ERROR", e.getMessage()); t_list.add(1, "0");}
             }
         });
 
@@ -174,8 +168,8 @@ public class Settings extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                try {checkText(s_text, 60, 2);}
-                catch(Exception e) {Log.e("ERROR", e.getMessage()); t_list.add(2, "+0");}
+                try {checkText(s_text, 59, 2);}
+                catch(Exception e) {Log.e("ERROR", e.getMessage()); t_list.add(2, "0");}
             }
         });
 
@@ -183,9 +177,8 @@ public class Settings extends AppCompatActivity {
 
     public void checkText(EditText text, int maxValue, int index) {
         StringBuilder stext = new StringBuilder(text.getText().toString());
-        stext.deleteCharAt(0);
         if (Integer.valueOf(stext.toString()) > maxValue) {
-            text.setError("Ta wartość nie może być większa niż "+maxValue); t_list.add(index, "+0");
+            text.setError("Ta wartość nie może być większa niż "+maxValue); t_list.add(index, "0");
         } else {
             t_list.add(index, text.getText().toString());
         }
@@ -194,6 +187,10 @@ public class Settings extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.i("INFO", "Save Settings"); sPref.edit().putString("time", gson.toJson(t_list)).commit(); t_list.clear();
+        Intent intent = new Intent(getApplication(), Notification_Service.class);
+        intent.setAction("ACTION_STOP");
+        startService(intent);
+        startService(new Intent(getApplication(), Notification_Service.class));
         startActivity(new Intent(this, Main.class));
         this.finish();
         return true;

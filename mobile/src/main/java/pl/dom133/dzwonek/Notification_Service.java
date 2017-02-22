@@ -81,13 +81,26 @@ public class Notification_Service extends Service {
             running = true;
             while(!isCancelled()) {
                 try {
+                    int blesson = time.getLessonByTime(8, 0, sPref.getInt("les_type", 0)).get(0);
                     int lesson = time.getLessonByTime(time.getTime().get(0), time.getTime().get(1), sPref.getInt("les_type", 0)).get(0);
                     int last_lesson = time.getLessonByTime(time.getTime().get(0), time.getTime().get(1), sPref.getInt("les_type", 0)).get(1);
                     int day = time.getDay();
                     Log.i("INFO", "Type: "+sPref.getInt("les_type", 0)+" Day: " + day + " Lesson: " + lesson +" Last: "+last_lesson+ " Time: " + time.getTime().get(0) + ":" + time.getTime().get(1) + ":" + time.getTime().get(2));
                     if (day >= 1 || day <= 5 && sPref.contains("day_" + day)) {
-                        Log.i("INFO", "Day: " + day);
-                        if (lesson <= sPref.getInt("day_" + day, 1) && lesson != 10 && lesson != 0 && time.getTime().get(0) >= time.getLessonArray(lesson, "od", sPref.getInt("les_type", 0)).get(0) && (time.getTime().get(1) < time.getLessonArray(lesson, "do", sPref.getInt("les_type", 0)).get(1) || time.getTime().get(1) > time.getLessonArray(lesson, "do", sPref.getInt("les_type", 0)).get(1))) {
+                        if (blesson <= sPref.getInt("day_" + day, 1) && lesson == 0 && time.getTime().get(0) == 7 && ((60 - time.getTime().get(1)) <= 10)) {
+                            int hour = (time.getLessonArray(blesson, "od", sPref.getInt("les_type", 0)).get(0) - time.getTime().get(0));
+                            int minuts = (time.getLessonArray(blesson, "od", sPref.getInt("les_type", 0)).get(1) - time.getTime().get(1)) + (hour * 60);
+                            int sec = 60-time.getTime().get(2);
+
+                            arrayList.add(String.valueOf(minuts)); arrayList.add(String.valueOf(sec));
+
+                            Log.i("INFO", "Time: " + hour + ":" + minuts + ":" + sec);
+                            if (minuts > 1) {
+                                if(sec!=60 ){notification.sendNotification("Pozostało: " + minuts + "min", "Do dzwonka pozostało: " + (minuts-1) + ":" + time.getString(sec) + "min", minuts, sec); arrayList.add("Pozostało: " + minuts + "min"); arrayList.add("Do dzwonka pozostało: " + (minuts-1) + ":" + time.getString(sec) + "min");}
+                                else {notification.sendNotification("Pozostało: " + minuts + "min", "Do dzwonka pozostało: " + minuts+"min", minuts, sec); arrayList.add("Pozostało: " + minuts + "min"); arrayList.add("Do dzwonka pozostało: " + minuts+"min");}
+                            } else if (minuts == 1 && sec < 60) {notification.sendNotification("Pozostało: " + time.getString(sec) + "sec", "Do dzwonka pozostało: " + time.getString(sec) + "sec", minuts, sec); arrayList.add("Pozostało: " + time.getString(sec) + "sec"); arrayList.add("Do dzwonka pozostało: " + time.getString(sec) + "sec");
+                            } else {notification.cancleNotification(1);arrayList.add("");}
+                        } else if (lesson <= sPref.getInt("day_" + day, 1) && lesson != 10 && lesson != 0 && time.getTime().get(0) >= time.getLessonArray(lesson, "od", sPref.getInt("les_type", 0)).get(0) && (time.getTime().get(1) < time.getLessonArray(lesson, "do", sPref.getInt("les_type", 0)).get(1) || time.getTime().get(1) > time.getLessonArray(lesson, "do", sPref.getInt("les_type", 0)).get(1))) {
                             int hour = (time.getLessonArray(lesson, "do", sPref.getInt("les_type", 0)).get(0) - time.getTime().get(0));
                             int minuts = (time.getLessonArray(lesson, "do", sPref.getInt("les_type", 0)).get(1) - time.getTime().get(1)) + (hour * 60);
                             int sec = 60-time.getTime().get(2);

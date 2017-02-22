@@ -396,15 +396,15 @@ public class Time {
         Calendar c = Calendar.getInstance();
         if(sPref.getString("time", null)!=null) {
             List<String> text = Arrays.asList(gson.fromJson(sPref.getString("time", null), String[].class));
-            StringBuilder h_txt = new StringBuilder(text.get(0));StringBuilder m_txt = new StringBuilder(text.get(1));StringBuilder s_txt = new StringBuilder(text.get(2));
-            Character h_opr = h_txt.charAt(0); Character m_opr = m_txt.charAt(0); Character s_opr = s_txt.charAt(0);
-            h_txt.deleteCharAt(0); m_txt.deleteCharAt(0); s_txt.deleteCharAt(0);
-            Expression h_math = new Expression(h_txt.toString()+h_opr+c.get(Calendar.HOUR_OF_DAY));Expression m_math = new Expression(m_txt.toString()+m_opr+c.get(Calendar.MINUTE));Expression s_math = new Expression(s_txt.toString()+s_opr+c.get(Calendar.SECOND));
-            BigDecimal h_result = h_math.eval();BigDecimal m_result = m_math.eval();BigDecimal s_result = s_math.eval();
-            Log.i("TIME", String.valueOf(h_result));
-            list.add(c.get(Calendar.HOUR_OF_DAY));
-            list.add(c.get(Calendar.MINUTE));
-            list.add(c.get(Calendar.SECOND));
+            int hour = Integer.valueOf(text.get(0));
+            int min = Integer.valueOf(text.get(1));
+            int sec = Integer.valueOf(text.get(2));
+            int h_res = 0; int m_res = 0; int s_res = 0;
+            //if(c.get(Calendar.HOUR_OF_DAY) + hour >= 24) { }
+            Log.i("TIME", "H: "+(c.get(Calendar.HOUR_OF_DAY) + hour)+" M: "+(c.get(Calendar.MINUTE) + min)+" S: "+(c.get(Calendar.SECOND) + sec));
+            list.add(c.get(Calendar.HOUR_OF_DAY) + hour);
+            list.add(c.get(Calendar.MINUTE) + min);
+            list.add(c.get(Calendar.SECOND) + sec);
         } else {
             list.add(c.get(Calendar.HOUR_OF_DAY));
             list.add(c.get(Calendar.MINUTE));

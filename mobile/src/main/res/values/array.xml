@@ -30,7 +30,7 @@
     </string-array>
 
     <string-array name="type_array">
-        <item>Podstawówka/Gimnazjum</item>
+        <item>Podstawówka</item>
         <item>Ponadgimnazjalna</item>
     </string-array>
 
