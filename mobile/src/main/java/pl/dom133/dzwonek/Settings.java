@@ -41,6 +41,7 @@ public class Settings extends AppCompatActivity {
         final EditText h_text = (EditText) findViewById(R.id.h_text);
         final EditText m_text = (EditText) findViewById(R.id.m_text);
         final EditText s_text = (EditText) findViewById(R.id.s_text);
+        final EditText nt_before_text = (EditText) findViewById(R.id.nt_time);
 
         //Spinners
         Spinner time_spinner = (Spinner) findViewById(R.id.time_spinner);
@@ -117,6 +118,36 @@ public class Settings extends AppCompatActivity {
 
             }
         });
+        nt_before_text.setText(String.valueOf(sPref.getInt("nt_before", 10)));
+
+        //Save NT_Before
+        nt_before_text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                try {
+                    if (Integer.valueOf(nt_before_text.getText().toString()) > 59) {
+                        nt_before_text.setError("Ta wartość nie może być większa niż 59");
+                        sPref.edit().putInt("nt_before", 10).commit();
+                    } else if (Integer.valueOf(nt_before_text.getText().toString()) < 1) {
+                        nt_before_text.setError("Ta wartość nie może być mniejsza niż 1");
+                        sPref.edit().putInt("nt_before", 10).commit();
+                    } else {
+                        sPref.edit().putInt("nt_before", Integer.valueOf(nt_before_text.getText().toString())).commit();
+                    }
+                } catch (Exception e) { Log.e("ERROR", e.getMessage()); sPref.edit().putInt("nt_before", 10).commit(); }
+            }
+        });
+
 
         //Save editext
         h_text.addTextChangedListener(new TextWatcher() {
@@ -176,9 +207,12 @@ public class Settings extends AppCompatActivity {
     }
 
     public void checkText(EditText text, int maxValue, int index) {
-        StringBuilder stext = new StringBuilder(text.getText().toString());
-        if (Integer.valueOf(stext.toString()) > maxValue) {
-            text.setError("Ta wartość nie może być większa niż "+maxValue); t_list.add(index, "0");
+        if (Integer.valueOf(text.getText().toString()) > maxValue) {
+            text.setError("Ta wartość nie może być większa niż " + maxValue);
+            t_list.add(index, "0");
+        } else if(Integer.valueOf(text.getText().toString()) < (maxValue*-1)) {
+            text.setError("Ta wartość nie może być mniejsza niż " + maxValue);
+            t_list.add(index, "0");
         } else {
             t_list.add(index, text.getText().toString());
         }

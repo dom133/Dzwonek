@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Build;
+import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -20,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -36,7 +39,7 @@ import java.util.ArrayList;
 
 public class Main extends AppCompatActivity{
 
-
+    private Resources res;
     private ArrayAdapter<String> adapter_list = null;
     private ArrayList<String> arrayList = new ArrayList<>();
     private Time time;
@@ -51,6 +54,7 @@ public class Main extends AppCompatActivity{
         setSupportActionBar(toolbar);
 
         //Components
+        res = getResources();
         ListView list = (ListView) findViewById(R.id.list);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_button);
         sPref = getSharedPreferences("Dzwonek", Context.MODE_PRIVATE);
@@ -76,9 +80,11 @@ public class Main extends AppCompatActivity{
                 ArrayAdapter<CharSequence> day_adapter = ArrayAdapter.createFromResource(getBaseContext(), R.array.days_array, android.R.layout.simple_spinner_item);
                 ArrayAdapter<CharSequence> lesson_adapter = ArrayAdapter.createFromResource(getBaseContext(), R.array.lessons_array_0, android.R.layout.simple_spinner_item);
                 ArrayAdapter<CharSequence> type_adapter = ArrayAdapter.createFromResource(getBaseContext(), R.array.type_array, android.R.layout.simple_spinner_item);
+                //Layout
+                LinearLayout type_layout = (LinearLayout) addDialogView.findViewById(R.id.type_layout);
 
-                if(arrayList.size()>1) {type_spinner.setEnabled(false);}
-                else {type_spinner.setEnabled(true);}
+                if(arrayList.size()>1) {type_layout.setVisibility(View.GONE);}
+                else {type_layout.setVisibility(View.VISIBLE);}
 
                 day_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 lesson_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -87,6 +93,16 @@ public class Main extends AppCompatActivity{
                 day_spinner.setAdapter(day_adapter);
                 lesson_spinner.setAdapter(lesson_adapter);
                 type_spinner.setSelection(sPref.getInt("les_type", 0));
+
+                if(sPref.getInt("les_type", 0)==0) {
+                    lesson_adapter = ArrayAdapter.createFromResource(getBaseContext(), R.array.lessons_array_0, android.R.layout.simple_spinner_item);
+                    lesson_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    lesson_spinner.setAdapter(lesson_adapter); lesson_adapter.notifyDataSetChanged();
+                } else {
+                    lesson_adapter = ArrayAdapter.createFromResource(getBaseContext(), R.array.lessons_array_1, android.R.layout.simple_spinner_item);
+                    lesson_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    lesson_spinner.setAdapter(lesson_adapter); lesson_adapter.notifyDataSetChanged();
+                }
             }
         });
 
@@ -116,84 +132,27 @@ public class Main extends AppCompatActivity{
             public void onClick(View view) {
                 Spinner day_spinner = (Spinner) addDialogView.findViewById(R.id.days_spinner);
                 Spinner lesson_spinner = (Spinner) addDialogView.findViewById(R.id.lesson_spinner);
+                String days_array[] = res.getStringArray(R.array.days_array);
                 Log.i("INFO", "DAY: "+day_spinner.getSelectedItem().toString()+" LESSON: "+lesson_spinner.getSelectedItem().toString());
-                switch(day_spinner.getSelectedItem().toString()) {
-                    case "Poniedziałek":{
-                        Log.i("INFO", "PON 1");
-                        if(!sPref.contains("day_1")) {
-                            Log.i("INFO", "PON 2");
-                            arrayList.add("Poniedziałek: ");
+                long day = day_spinner.getSelectedItemId()+1;
+                if(day_spinner.getSelectedItemId()==0) {
+                    if(!sPref.contains("day_"+day)) {
+                        arrayList.add(day_spinner.getSelectedItem().toString()+": ");
+                        arrayList.addAll(time.getLesson(Integer.parseInt(lesson_spinner.getSelectedItem().toString()), sPref.getInt("les_type", 0)));
+                        adapter_list.notifyDataSetChanged();
+                        sPref.edit().putInt("day_"+day, Integer.parseInt(lesson_spinner.getSelectedItem().toString())).commit();
+                        Toast.makeText(getApplication(), "Poprawnie dodano lekcje", Toast.LENGTH_SHORT).show();
+                    } else {Toast.makeText(getApplication(), "W "+day_spinner.getSelectedItem().toString().toLowerCase()+" są już dodane lekcje", Toast.LENGTH_SHORT).show();}
+                } else {
+                    if(sPref.contains("day_"+(day-1))) {
+                        if(!sPref.contains("day_"+day)) {
+                            arrayList.add(day_spinner.getSelectedItem().toString()+": ");
                             arrayList.addAll(time.getLesson(Integer.parseInt(lesson_spinner.getSelectedItem().toString()), sPref.getInt("les_type", 0)));
                             adapter_list.notifyDataSetChanged();
-                            sPref.edit().putInt("day_1", Integer.parseInt(lesson_spinner.getSelectedItem().toString())).commit();
+                            sPref.edit().putInt("day_"+day, Integer.parseInt(lesson_spinner.getSelectedItem().toString())).commit();
                             Toast.makeText(getApplication(), "Poprawnie dodano lekcje", Toast.LENGTH_SHORT).show();
-                        } else {Log.i("INFO", "PON 3");Toast.makeText(getApplication(), "W poniedziałek są już dodane lekcje", Toast.LENGTH_SHORT).show();}
-                        break;
-                    }
-
-                    case "Wtorek":{
-                        Log.i("INFO", "WTO 1");
-                        if(sPref.contains("day_1")) {
-                            Log.i("INFO", "WTO 2");
-                            if(!sPref.contains("day_2")) {
-                                Log.i("INFO", "WTO 3");
-                                arrayList.add("Wtorek: ");
-                                arrayList.addAll(time.getLesson(Integer.parseInt(lesson_spinner.getSelectedItem().toString()), sPref.getInt("les_type", 0)));
-                                adapter_list.notifyDataSetChanged();
-                                sPref.edit().putInt("day_2", Integer.parseInt(lesson_spinner.getSelectedItem().toString())).commit();
-                                Toast.makeText(getApplication(), "Poprawnie dodano lekcje", Toast.LENGTH_SHORT).show();
-                            } else {Log.i("INFO", "WTO 4");Toast.makeText(getApplication(), "W wtorek są już dodane lekcje", Toast.LENGTH_SHORT).show();}
-                        } else {Log.i("INFO", "WTO 5");Toast.makeText(getApplication(), "Najpierw musisz dodać lekcje w poniedziałek", Toast.LENGTH_SHORT).show();}
-                        break;
-                    }
-
-                    case "Środa":{
-                        Log.i("INFO", "SRO 1");
-                        if(sPref.contains("day_2")) {
-                            Log.i("INFO", "SRO 2");
-                            if(!sPref.contains("day_3")) {
-                                Log.i("INFO", "SRO 3");
-                                arrayList.add("Środa: ");
-                                arrayList.addAll(time.getLesson(Integer.parseInt(lesson_spinner.getSelectedItem().toString()), sPref.getInt("les_type", 0)));
-                                adapter_list.notifyDataSetChanged();
-                                sPref.edit().putInt("day_3", Integer.parseInt(lesson_spinner.getSelectedItem().toString())).commit();
-                                Toast.makeText(getApplication(), "Poprawnie dodano lekcje", Toast.LENGTH_SHORT).show();
-                            } else {Log.i("INFO", "SRO 4");Toast.makeText(getApplication(), "W środę są już dodane lekcje", Toast.LENGTH_SHORT).show();}
-                        } else {Log.i("INFO", "SRO 5");Toast.makeText(getApplication(), "Najpierw musisz dodać lekcje w wtorek", Toast.LENGTH_LONG).show();}
-                        break;
-                    }
-
-                    case "Czwartek":{
-                        Log.i("INFO", "CZW 1");
-                        if(sPref.contains("day_3")) {
-                            Log.i("INFO", "CZW 2");
-                            if(!sPref.contains("day_4")) {
-                                Log.i("INFO", "CZW 3");
-                                arrayList.add("Czwartek: ");
-                                arrayList.addAll(time.getLesson(Integer.parseInt(lesson_spinner.getSelectedItem().toString()), sPref.getInt("les_type", 0)));
-                                adapter_list.notifyDataSetChanged();
-                                sPref.edit().putInt("day_4", Integer.parseInt(lesson_spinner.getSelectedItem().toString())).commit();
-                                Toast.makeText(getApplication(), "Poprawnie dodano lekcje", Toast.LENGTH_SHORT).show();
-                            } else {Log.i("INFO", "CZW 4");Toast.makeText(getApplication(), "W czwartek są już dodane lekcje", Toast.LENGTH_SHORT).show();}
-                        } else {Log.i("INFO", "CZW 5");Toast.makeText(getApplication(), "Najpierw musisz dodać lekcje w środę", Toast.LENGTH_LONG).show();}
-                        break;
-                    }
-
-                    case "Piątek":{
-                        Log.i("INFO", "PIA 1");
-                        if(sPref.contains("day_4")) {
-                            Log.i("INFO", "PIA 2");
-                            if(!sPref.contains("day_5")) {
-                                Log.i("INFO", "PIA 3");
-                                arrayList.add("Piątek: ");
-                                arrayList.addAll(time.getLesson(Integer.parseInt(lesson_spinner.getSelectedItem().toString()), sPref.getInt("les_type", 0)));
-                                adapter_list.notifyDataSetChanged();
-                                sPref.edit().putInt("day_5", Integer.parseInt(lesson_spinner.getSelectedItem().toString())).commit();
-                                Toast.makeText(getApplication(), "Poprawnie dodano lekcje", Toast.LENGTH_SHORT).show();
-                            } else {Log.i("INFO", "PIA 4");Toast.makeText(getApplication(), "W piątek są już dodane lekcje", Toast.LENGTH_SHORT).show();}
-                        } else {Log.i("INFO", "PIA 5");Toast.makeText(getApplication(), "Najpierw musisz dodać lekcje w piątek", Toast.LENGTH_LONG).show();}
-                        break;
-                    }
+                        } else {Toast.makeText(getApplication(), "W "+day_spinner.getSelectedItem().toString().toLowerCase()+" są już dodane lekcje", Toast.LENGTH_SHORT).show();}
+                    } else {Toast.makeText(getApplication(), "Najpierw musisz dodać lekcje w "+days_array[(int)(day_spinner.getSelectedItemId()-1)].toLowerCase(), Toast.LENGTH_SHORT).show();}
                 }
                 restartService();
                 googleApi.sendData("arrayList", arrayList);
@@ -232,7 +191,6 @@ public class Main extends AppCompatActivity{
         int id = item.getItemId();
         if(id==R.id.action_settings) {
             startActivity(new Intent(this, Settings.class));
-            this.finish();
         } else if(id==R.id.action_clear) {
             for(int i=1; i<=5; i++) {sPref.edit().remove("day_"+i).commit();}
             arrayList.clear();
@@ -266,6 +224,7 @@ public class Main extends AppCompatActivity{
         Intent intent = new Intent(getApplication(), Notification_Service.class);
         intent.setAction("ACTION_STOP");
         startService(intent);
+        startService(new Intent(getApplication(), Notification_Service.class));
     }
 
 }

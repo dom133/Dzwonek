@@ -17,6 +17,7 @@ import com.google.android.gms.wearable.Wearable;
 import java.util.ArrayList;
 
 public class GoogleApi implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
     private GoogleApiClient googleApiClient;
     private Application app;
     private String name;
@@ -56,12 +57,8 @@ public class GoogleApi implements GoogleApiClient.ConnectionCallbacks, GoogleApi
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
-        Log.i("INFO", "Connection Suspended");
-    }
+    public void onConnectionSuspended(int i) {Log.i("INFO", "Connection Suspended");}
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.i("INFO", "Connection Failed");
-    }
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {Log.i("INFO", "Connection Failed");}
 }

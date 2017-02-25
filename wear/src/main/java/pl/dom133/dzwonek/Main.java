@@ -30,8 +30,8 @@ import java.util.Set;
 
 public class Main extends Activity implements GoogleApiClient.ConnectionCallbacks, DataApi.DataListener {
 
-    private TextView mTextView;
     private GoogleApiClient googleApiClient;
+    private TextView mTextView;
     private ArrayList<String> arrayList = new ArrayList<>();
     private ArrayAdapter<String> arrayAdapter = null;
     private SharedPreferences sPref;
@@ -70,7 +70,6 @@ public class Main extends Activity implements GoogleApiClient.ConnectionCallback
             arrayAdapter.notifyDataSetChanged();
         }
 
-        //GoogleApiClient
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addApi(Wearable.API)
@@ -116,7 +115,7 @@ public class Main extends Activity implements GoogleApiClient.ConnectionCallback
                     }
                 }
             }
-        } catch(Exception e) {Log.e("ERROR", e.getMessage());}
+        } catch(Exception e) {Log.e("ERROR", e.getMessage()); notifications.cancleNotification(1);}
     }
 
     @Override

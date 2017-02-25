@@ -24,11 +24,11 @@
             android:layout_height="40dp">
 
             <TextView
-                android:text="Częstotliwość odświerzania:"
+                android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView3"
                 android:layout_weight="1"
+                android:text="@string/settings_refresh"
                 android:textColor="#000000"
                 tools:ignore="HardcodedText" />
 
@@ -40,25 +40,47 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_nt_time"
+                android:textColor="#000000" />
+
+            <EditText
+                android:id="@+id/nt_time"
+                android:layout_width="62dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.91"
+                android:ems="10"
+                android:inputType="number" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="Różnica czasu: H:"
+                android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView4"
+                android:text="Różnica czasu: H:"
                 android:textColor="#000000"
                 tools:ignore="HardcodedText" />
 
             <EditText
+                android:id="@+id/h_text"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:inputType="text|number"
                 android:ems="10"
-                android:id="@+id/h_text"
-                android:text="+0"
+                android:inputType="text|number"
+                android:text="0"
                 tools:ignore="HardcodedText,LabelFor" />
 
             <TextView
@@ -70,12 +92,12 @@
                 tools:ignore="HardcodedText" />
 
             <EditText
+                android:id="@+id/m_text"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:inputType="text|number"
                 android:ems="10"
-                android:id="@+id/m_text"
-                android:text="+0"
+                android:inputType="text|number"
+                android:text="0"
                 tools:ignore="HardcodedText,LabelFor" />
 
             <TextView
@@ -87,12 +109,12 @@
                 tools:ignore="HardcodedText" />
 
             <EditText
+                android:id="@+id/s_text"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:inputType="text|number"
                 android:ems="10"
-                android:id="@+id/s_text"
-                android:text="+0"
+                android:inputType="text|number"
+                android:text="0"
                 tools:ignore="HardcodedText,LabelFor" />
 
         </LinearLayout>

@@ -87,7 +87,7 @@ public class Notification_Service extends Service {
                     int day = time.getDay();
                     Log.i("INFO", "Type: "+sPref.getInt("les_type", 0)+" Day: " + day + " Lesson: " + lesson +" Last: "+last_lesson+ " Time: " + time.getTime().get(0) + ":" + time.getTime().get(1) + ":" + time.getTime().get(2));
                     if (day >= 1 || day <= 5 && sPref.contains("day_" + day)) {
-                        if (blesson <= sPref.getInt("day_" + day, 1) && lesson == 0 && time.getTime().get(0) == 7 && ((60 - time.getTime().get(1)) <= 10)) {
+                        if (blesson <= sPref.getInt("day_" + day, 1) && lesson == 0 && time.getTime().get(0) == 7 && ((60 - time.getTime().get(1)) <= sPref.getInt("nt_before", 10))) {
                             int hour = (time.getLessonArray(blesson, "od", sPref.getInt("les_type", 0)).get(0) - time.getTime().get(0));
                             int minuts = (time.getLessonArray(blesson, "od", sPref.getInt("les_type", 0)).get(1) - time.getTime().get(1)) + (hour * 60);
                             int sec = 60-time.getTime().get(2);

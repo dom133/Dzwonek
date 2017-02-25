@@ -2,4 +2,6 @@
     <string name="app_name">Dzwonek</string>
     <string name="action_settings">Ustawienia</string>
     <string name="action_clear">Usuń wszystko</string>
+    <string name="settings_refresh">Częstotliwość odświerzania:</string>
+    <string name="settings_nt_time">Ile minut przed wyswietlic powiadomienie:</string>
 </resources>
